@@ -23,32 +23,38 @@
 
     <div class="flex items-start justify-between">
 
-      <div>
+  <div>
+    <h3 class="text-lg font-bold text-slate-900">
+      {{ nome }}
+    </h3>
+  </div>
 
-        <h3
-          class="text-lg font-bold text-slate-900">
+  <div class="flex items-center gap-2">
+    
+    <span
+      class="rounded-full px-3 py-1 text-xs font-semibold"
+      [class]="
+        grupo === 'MIDIA'
+        ? 'bg-blue-100 text-blue-700'
+        : 'bg-cyan-100 text-cyan-700'
+      ">
+      {{ grupo }}
+    </span>
 
-          {{ nome }}
+    <button 
+      type="button"
+      class="rounded-full p-1.5 text-slate-500 hover:bg-slate-100 cursor-pointer hover:text-slate-700 transition-colors focus:outline-none"
+      >
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5?" />
+      </svg>
 
-        </h3>
+    </button>
 
+  </div>
 
-      </div>
-
-      <span
-        class="rounded-full px-3 py-1 text-xs font-semibold"
-
-        [class]="
-          grupo === 'MIDIA'
-          ? 'bg-blue-100 text-blue-700'
-          : 'bg-cyan-100 text-cyan-700'
-        ">
-
-        {{ grupo }}
-
-      </span>
-
-    </div>
+</div>
 
     <!-- IGREJA E REGIÃO -->
 
