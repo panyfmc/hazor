@@ -14,5 +14,5 @@ export interface Aluno {
   atividadesAtual: number;
   atividadesMeta: number;
 
-  grupo: 'OFICINA' | 'MIDIA';
+  grupo: 'OFICINA' | 'MÍDIA';
 }

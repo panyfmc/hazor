@@ -21,6 +21,6 @@ export class AlunoCard {
   @Input() atividadesAtual = 0;
   @Input() atividadesMeta = 0;
 
-  @Input() grupo: 'OFICINA' | 'MIDIA' = 'OFICINA';
+  @Input() grupo: 'OFICINA' | 'MÍDIA' = 'OFICINA';
 
 }

@@ -23,6 +23,7 @@
       </div>
 
       <button
+      (click)="abrirModal()"
         class="w-full lg:w-auto rounded-2xl bg-gradient-to-r cursor-pointer from-blue-500 to-cyan-400 px-5 py-3.5 font-medium text-white transition hover:scale-[1.02]">
         Novo Aluno
       </button>
@@ -68,3 +69,10 @@
   </div>
 
 </div>
+
+@if (mostrarModalCadastro) {
+  <app-cadastro-aluno 
+    (fechar)="fecharModal()" 
+    (salvar)="cadastrarAluno($event)">
+  </app-cadastro-aluno>
+}
