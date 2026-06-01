@@ -1,14 +1,21 @@
 require('dotenv').config();
+const app = require('./src/app')
 
-const app = require('../app');
+const { connectDatabase } =
+require('./src/config/database');
 
-const connectDatabase = require('./config/database');
+async function start() {
 
-connectDatabase();
+  await connectDatabase();
 
-app.listen(process.env.PORT, () => {
+  app.listen(process.env.PORT, () => {
 
-  console.log(
-    `Servidor rodando na porta ${process.env.PORT}`
-  );
-});
+    console.log(
+      `Servidor rodando na porta ${process.env.PORT}`
+    );
+
+  });
+
+}
+
+start();
