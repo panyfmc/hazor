@@ -1,5 +1,5 @@
-require('dotenv').config();
-const app = require('./src/app')
+require('dotenv').config()
+const app = require('./app')
 
 const { connectDatabase } =
 require('./src/config/database');
@@ -18,4 +18,4 @@ async function start() {
 
 }
 
-start();
+start()

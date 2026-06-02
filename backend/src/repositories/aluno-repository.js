@@ -1,4 +1,5 @@
-const { sql } = require('../config/database');
+const { sql } = require('../config/database')
+
 
 async function listar() {
 
@@ -17,11 +18,68 @@ async function listar() {
             ON R.Id = I.RegiaoId
         INNER JOIN Grupos G
             ON G.Id = A.GrupoId
-    `);
+    `)
 
-    return result.recordset;
+    return result.recordset
+}
+
+async function buscarPorId(id) {
+    const result = await new sql.Request().input('id', sql.Int, id).query(`
+        SELECT * FROM Alunos
+        WHERE Id = @id
+
+        `)
+    return result.recordset[0]
+}
+
+async function criar(aluno) {
+
+    await new sql.Request()
+
+    .input(
+        'nomeCompleto',
+        sql.NVarChar(150),
+        aluno.nomeCompleto
+    )
+
+    .input(
+        'igrejaId',
+        sql.Int,
+        aluno.igrejaId
+    )
+
+    .input(
+        'grupoId',
+        sql.Int,
+        aluno.grupoId
+    )
+
+    .input(
+        'dataIngresso',
+        sql.Date,
+        aluno.dataIngresso
+    )
+
+    .query(`
+        INSERT INTO Alunos
+        (
+            NomeCompleto,
+            IgrejaId,
+            GrupoId,
+            DataIngresso
+        )
+        VALUES
+        (
+            @nomeCompleto,
+            @igrejaId,
+            @grupoId,
+            @dataIngresso
+        )
+    `)
 }
 
 module.exports = {
-    listar
-};
+    listar,
+    buscarPorId,
+    criar
+}

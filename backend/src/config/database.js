@@ -17,11 +17,11 @@ async function connectDatabase() {
 
     await sql.connect(config);
 
-    console.log('Banco conectado');
+    console.log('Banco conectado')
 
   } catch (error) {
 
-    console.error(error);
+    console.error(error)
 
   }
 }
@@ -29,4 +29,4 @@ async function connectDatabase() {
 module.exports = {
   sql,
   connectDatabase
-};
+}

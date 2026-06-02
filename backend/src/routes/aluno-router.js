@@ -1,11 +1,21 @@
-const router = require('express').Router();
+const router = require('express').Router()
 
 const alunoController =
-require('../controllers/aluno-controller');
+require('../controllers/aluno-controller')
 
 router.get(
     '/',
     alunoController.listar
-);
+)
 
-module.exports = router;
+router.post(
+    '/',
+    alunoController.criar
+)
+
+router.get(
+    '/:id',
+    alunoController.buscarPorId
+)
+
+module.exports = router
