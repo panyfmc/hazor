@@ -1,7 +1,8 @@
+const {sql} = require('../config/database')
+
 async function reativar(id, dataReingresso) {
 
-    await sql
-        .request()
+    const result = await new sql.Request()
         .input('id', sql.Int, id)
         .input(
             'dataReingresso',
@@ -12,7 +13,12 @@ async function reativar(id, dataReingresso) {
             UPDATE Alunos
             SET
                 Ativo = 1,
-                DataReingresso = @dataReingresso
+                DataReingresso = GETDATE()
             WHERE Id = @id
         `)
+    return result.recordset
+}
+
+module.exports = {
+    reativar
 }

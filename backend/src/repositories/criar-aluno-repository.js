@@ -1,6 +1,8 @@
+const {sql} = require('../config/database')
+
 async function criar(aluno) {
 
-    await sql
+    const result = await sql
         .request()
         .input(
             'nomeCompleto',
@@ -38,4 +40,5 @@ async function criar(aluno) {
                 @dataIngresso
             )
         `)
+    return result.recordset
 }

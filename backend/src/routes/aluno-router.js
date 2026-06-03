@@ -18,4 +18,19 @@ router.get(
     alunoController.buscarPorId
 )
 
+router.put(
+    '/:id',
+    alunoController.atualizar
+)
+
+router.patch(
+    '/:id/inativar',
+    alunoController.inativar
+)
+
+router.patch(
+    '/:id/reativar', 
+    alunoController.reativar 
+)
+
 module.exports = router

@@ -20,8 +20,34 @@ async function buscarPorId(req, res) {
     res.json(aluno)
 }
 
+async function atualizar(req, res) {
+    await alunoService.atualizar(req.params.id, req.body)
+    res.json({
+        mensagem: 'Aluno atualizado'
+    })
+}
+
+async function inativar(req, res) {
+    await alunoService.inativar(req.params.id)
+    res.json({
+        mensagem: 'Aluno inativado'
+    })
+}
+
+
+async function reativar(req, res) {
+    await alunoService.reativar(req.params.id)
+    res.json({
+        mensagem: 'Aluno reativado'
+    })
+}
+
+
 module.exports = {
     listar,
     buscarPorId,
-    criar
+    criar,
+    atualizar,
+    inativar,
+    reativar
 }

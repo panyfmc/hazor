@@ -1,4 +1,4 @@
-const { sql } = require('../config/database')
+const {sql} = require('../config/database')
 
 
 async function listar() {
@@ -34,7 +34,7 @@ async function buscarPorId(id) {
 
 async function criar(aluno) {
 
-    await new sql.Request()
+    const result = await new sql.Request()
 
     .input(
         'nomeCompleto',
@@ -76,6 +76,7 @@ async function criar(aluno) {
             @dataIngresso
         )
     `)
+    return result.recordset
 }
 
 module.exports = {

@@ -1,18 +1,18 @@
-async function inativar(id, dataInativacao) {
+const {sql} = require('../config/database')
 
-    await sql
-        .request()
+async function inativar(id) {
+
+    await new sql.Request()
         .input('id', sql.Int, id)
-        .input(
-            'dataInativacao',
-            sql.Date,
-            dataInativacao
-        )
         .query(`
             UPDATE Alunos
             SET
                 Ativo = 0,
-                DataInativacao = @dataInativacao
+                DataInativacao = GETDATE()
             WHERE Id = @id
         `)
+}
+
+module.exports = {
+    inativar
 }
