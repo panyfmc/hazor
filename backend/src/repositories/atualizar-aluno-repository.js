@@ -1,7 +1,9 @@
+const {sql} = require('../config/database')
+
 async function atualizar(id, aluno) {
 
-    await sql
-        .request()
+    await new sql
+        .Request()
         .input('id', sql.Int, id)
         .input(
             'nomeCompleto',
@@ -26,4 +28,8 @@ async function atualizar(id, aluno) {
                 GrupoId = @grupoId
             WHERE Id = @id
         `)
+}
+
+module.exports = {
+    atualizar
 }
