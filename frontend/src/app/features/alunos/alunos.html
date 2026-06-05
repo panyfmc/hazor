@@ -52,18 +52,18 @@
   <div
     class="grid gap-6"
     style="grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));">
-
-    @for(aluno of alunos; track aluno.nome){
+    
+    @for(aluno of alunos; track aluno.id){
         <app-aluno-card
-        [nome]="aluno.nome"
+        [nomeCompleto]="aluno.nomeCompleto"
         [igreja]="aluno.igreja"
         [regiao]="aluno.regiao"
+        [grupo]="aluno.grupo"
         [dataIngresso]="aluno.dataIngresso"
-        [frequenciaAtual]="aluno.frequenciaAtual"
-        [frequenciaMeta]="aluno.frequenciaMeta"
-        [atividadesAtual]="aluno.atividadesAtual"
-        [atividadesMeta]="aluno.atividadesMeta"
-        [grupo]="aluno.grupo">
+        [frequenciaAtual]="0"
+        [frequenciaMeta]="6"
+        [atividadesAtual]="0"
+        [atividadesMeta]="6">
         </app-aluno-card>
     }
   </div>

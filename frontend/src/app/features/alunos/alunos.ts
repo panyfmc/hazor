@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
-import { AlunoCard } from './components/aluno-card/aluno-card';
-import { Aluno } from './models/aluno-models';
-import { CadastroAluno } from './components/cadastro-aluno/cadastro-aluno';
+import { Component, OnInit, inject } from '@angular/core'
+import { AlunoCard } from './components/aluno-card/aluno-card'
+import { Aluno } from '../../shared/models/aluno-models'
+import { CadastroAluno } from './components/cadastro-aluno/cadastro-aluno'
+import { AlunoService } from '../../core/services/aluno-service'
 
 @Component({
   selector: 'app-alunos',
@@ -13,82 +14,69 @@ import { CadastroAluno } from './components/cadastro-aluno/cadastro-aluno';
   templateUrl: './alunos.html'
 })
 
-export class Alunos { // Mantive o nome "Alunos" que é o que o seu DashboardLayout está tentando importar!
-  mostrarModalCadastro = false; // Controle do Pop-up
+export class Alunos implements OnInit { 
+  mostrarModalCadastro = false 
+  private alunoService = inject(AlunoService)
 
-  // Seus dados mockados unificados aqui dentro da classe principal!
-  alunos: Aluno[] = [
-    {
-      nome: 'joao',
-      igreja: 'Tobias',
-      regiao: 'Tobias',
-      dataIngresso: new Date('2021-10-17'),
-      frequenciaAtual: 2,
-      frequenciaMeta: 6,
-      atividadesAtual: 2,
-      atividadesMeta: 6,
-      grupo: 'MÍDIA'
+  ngOnInit(): void {
+    this.carregarAlunos()
+  }
+
+  carregarAlunos() {
+
+  this.alunoService.listar().subscribe({
+    next: (dados: any[]) => {
+
+      this.alunos = dados.map(aluno => ({
+        id: aluno.Id,
+        nomeCompleto: aluno.NomeCompleto,
+
+        igreja: aluno.Igreja,
+
+        regiao: aluno.Regiao,
+
+        grupo: aluno.Grupo,
+
+        dataIngresso: aluno.DataIngresso,
+
+        frequenciaAtual: 0,
+        frequenciaMeta: 6,
+
+        atividadesAtual: 0,
+        atividadesMeta: 6
+
+      }));
+
     },
-    {
-      nome: 'joao',
-      igreja: 'Tobias',
-      regiao: 'Tobias',
-      dataIngresso: new Date('2021-10-17'),
-      frequenciaAtual: 2,
-      frequenciaMeta: 6,
-      atividadesAtual: 2,
-      atividadesMeta: 6,
-      grupo: 'MÍDIA'
-    },
-    {
-      nome: 'joao',
-      igreja: 'Tobias',
-      regiao: 'Tobias',
-      dataIngresso: new Date('2021-10-17'),
-      frequenciaAtual: 2,
-      frequenciaMeta: 6,
-      atividadesAtual: 2,
-      atividadesMeta: 6,
-      grupo: 'MÍDIA'
-    },
-    {
-      nome: 'joao',
-      igreja: 'Tobias',
-      regiao: 'Tobias',
-      dataIngresso: new Date('2021-10-17'),
-      frequenciaAtual: 2,
-      frequenciaMeta: 6,
-      atividadesAtual: 2,
-      atividadesMeta: 6,
-      grupo: 'MÍDIA'
-    },
-    {
-      nome: 'Pedro',
-      igreja: 'Sede',
-      regiao: 'Tobias',
-      dataIngresso: new Date('2021-10-11'),
-      frequenciaAtual: 6,
-      frequenciaMeta: 6,
-      atividadesAtual: 4,
-      atividadesMeta: 6,
-      grupo: 'OFICINA'
+
+    error: (erro) => {
+      console.error(erro);
     }
-  ];
 
+  })
+
+}
+  alunos: Aluno[] = []
+
+  
   abrirModal() {
-    this.mostrarModalCadastro = true;
+    this.mostrarModalCadastro = true
   }
 
   fecharModal() {
-    this.mostrarModalCadastro = false;
+    this.mostrarModalCadastro = false
   }
 
-  cadastrarAluno(novoAluno: Aluno) {
-    console.log('Dados prontos para enviar para a API (MongoDB):', novoAluno);
-    
-    // Adiciona na lista local temporariamente
-    this.alunos.push(novoAluno);
-
-    this.fecharModal();
+  cadastrarAluno(novoAluno: any) {
+    this.alunoService.criar(novoAluno).subscribe({
+      next: () => {
+        this.carregarAlunos()
+        this.fecharModal()
+      },
+      error: erro => {
+        console.error(erro)
+      }
+    })
   }
+
 }
