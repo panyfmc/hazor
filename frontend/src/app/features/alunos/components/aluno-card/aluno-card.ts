@@ -10,7 +10,7 @@ import {  CommonModule } from '@angular/common'
   templateUrl: './aluno-card.html'
 })
 export class AlunoCard {
-
+  @Input() aluno!: any
   @Input() nomeCompleto = ''
   @Input() igreja = ''
   @Input() regiao = ''

@@ -18,6 +18,9 @@
       <div class="w-full lg:max-w-2xl">
         <input
           type="text"
+          #txt
+          [value]="termoPesquisa()"
+          (input)="termoPesquisa.set(txt.value)"
           placeholder="Pesquisar por nome, igreja ou região"
           class="w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-4 text-sm outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">
       </div>
@@ -32,17 +35,29 @@
 
     <div class="mt-5 flex flex-wrap gap-2 sm:gap-3">
       <button
-        class="rounded-2xl bg-blue-500 px-5 py-2.5 text-sm font-medium cursor-pointer text-white">
+        type="button"
+        (click)="mudarCategoria('todos')"
+        [class]="categoriaAtiva() === 'todos' 
+          ? 'rounded-2xl bg-blue-500 px-5 py-2.5 text-sm font-medium cursor-pointer text-white transition' 
+          : 'rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm cursor-pointer font-medium text-slate-600 hover:bg-slate-50 transition'">
         Todos
       </button>
 
       <button
-        class="rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm cursor-pointer font-medium text-slate-600">
+        type="button"
+        (click)="mudarCategoria('oficina')"
+        [class]="categoriaAtiva() === 'oficina' 
+          ? 'rounded-2xl bg-blue-500 px-5 py-2.5 text-sm font-medium cursor-pointer text-white transition' 
+          : 'rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm cursor-pointer font-medium text-slate-600 hover:bg-slate-50 transition'">
         Oficina
       </button>
 
       <button
-        class="rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm cursor-pointer font-medium text-slate-600">
+        type="button"
+        (click)="mudarCategoria('midia')"
+        [class]="categoriaAtiva() === 'midia' 
+          ? 'rounded-2xl bg-blue-500 px-5 py-2.5 text-sm font-medium cursor-pointer text-white transition' 
+          : 'rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm cursor-pointer font-medium text-slate-600 hover:bg-slate-50 transition'">
         Mídia
       </button>
     </div>
@@ -53,7 +68,7 @@
     class="grid gap-6"
     style="grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));">
     
-    @for(aluno of alunos(); track aluno.id){
+    <!-- @for(aluno of alunos(); track aluno.id){
         <app-aluno-card
         [nomeCompleto]="aluno.nomeCompleto"
         [igreja]="aluno.igreja"
@@ -65,7 +80,24 @@
         [atividadesAtual]="0"
         [atividadesMeta]="6">
         </app-aluno-card>
-    }
+    } -->
+  @for(aluno of alunosFiltrados(); track aluno.id){
+    <app-aluno-card
+      [nomeCompleto]="aluno.nomeCompleto"
+      [igreja]="aluno.igreja"
+      [regiao]="aluno.regiao"
+      [grupo]="aluno.grupo"
+      [dataIngresso]="aluno.dataIngresso"
+      [frequenciaAtual]="aluno.frequenciaAtual"
+      [frequenciaMeta]="aluno.frequenciaMeta"
+      [atividadesAtual]="aluno.atividadesAtual"
+      [atividadesMeta]="aluno.atividadesMeta">
+    </app-aluno-card>
+  } @empty {
+    <div class="col-span-full text-center py-8">
+      <p class="text-slate-500 text-sm">Nenhum aluno encontrado para esta pesquisa ou categoria.</p>
+    </div>
+  }
   </div>
 
 </div>
