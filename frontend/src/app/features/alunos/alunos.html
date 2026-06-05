@@ -53,7 +53,7 @@
     class="grid gap-6"
     style="grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));">
     
-    @for(aluno of alunos; track aluno.id){
+    @for(aluno of alunos(); track aluno.id){
         <app-aluno-card
         [nomeCompleto]="aluno.nomeCompleto"
         [igreja]="aluno.igreja"

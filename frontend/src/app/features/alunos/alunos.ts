@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core'
+import { Component, OnInit, inject, signal } from '@angular/core'
 import { AlunoCard } from './components/aluno-card/aluno-card'
 import { Aluno } from '../../shared/models/aluno-models'
 import { CadastroAluno } from './components/cadastro-aluno/cadastro-aluno'
@@ -17,6 +17,7 @@ import { AlunoService } from '../../core/services/aluno-service'
 export class Alunos implements OnInit { 
   mostrarModalCadastro = false 
   private alunoService = inject(AlunoService)
+  alunos = signal<Aluno[]>([])
 
   ngOnInit(): void {
     this.carregarAlunos()
@@ -26,8 +27,7 @@ export class Alunos implements OnInit {
 
   this.alunoService.listar().subscribe({
     next: (dados: any[]) => {
-
-      this.alunos = dados.map(aluno => ({
+      const mapeado = dados.map(aluno => ({
         id: aluno.Id,
         nomeCompleto: aluno.NomeCompleto,
 
@@ -45,19 +45,15 @@ export class Alunos implements OnInit {
         atividadesAtual: 0,
         atividadesMeta: 6
 
-      }));
-
+      }))
+      this.alunos.set(mapeado)
     },
-
     error: (erro) => {
-      console.error(erro);
+      console.error(erro)
     }
-
   })
 
 }
-  alunos: Aluno[] = []
-
   
   abrirModal() {
     this.mostrarModalCadastro = true
