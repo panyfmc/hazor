@@ -1,0 +1,31 @@
+import { Injectable, inject } from '@angular/core'
+import { HttpClient } from '@angular/common/http'
+
+@Injectable({
+  providedIn: 'root'
+})
+
+export class AlunoService {
+
+  private http = inject(HttpClient)
+
+  private apiUrl =
+    'http://localhost:3000/api/alunos'
+
+  listar() {
+
+    return this.http.get<any[]>(
+      this.apiUrl
+    )
+
+  }
+
+  criar(aluno: any) {
+
+  return this.http.post(
+    'http://localhost:3000/api/alunos',
+    aluno
+  )
+
+}
+}
