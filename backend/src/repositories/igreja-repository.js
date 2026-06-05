@@ -16,8 +16,8 @@ async function listar() {
 
 async function listarPorRegiao(regiaoId) {
 
-    const result = await sql
-        .request()
+    const result = await new sql
+        .Request()
         .input(
             'regiaoId',
             sql.Int,
