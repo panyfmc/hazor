@@ -10,6 +10,13 @@ async function inativar(id) {
                 Ativo = 0,
                 DataInativacao = GETDATE()
             WHERE Id = @id
+
+            UPDATE AlunoGrupos
+            SET
+                DataFim = CAST(GETDATE() AS DATE)
+            WHERE
+                AlunoId = @id
+            AND DataFim IS NULL
         `)
 }
 
