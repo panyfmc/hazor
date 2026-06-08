@@ -6,4 +6,4 @@ router.get(
     grupoController.listar
 )
 
-module.exports = router
+module.exports = router 
