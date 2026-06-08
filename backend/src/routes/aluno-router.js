@@ -1,7 +1,7 @@
 const router = require('express').Router()
 
-const alunoController =
-require('../controllers/aluno-controller')
+const alunoController = require('../controllers/aluno-controller')
+const excluirController = require('../controllers/excluir-controller')
 
 router.get(
     '/',
@@ -23,14 +23,16 @@ router.put(
     alunoController.atualizar
 )
 
-router.patch(
+router.put(
     '/:id/inativar',
     alunoController.inativar
 )
 
-router.patch(
+router.put(
     '/:id/reativar', 
     alunoController.reativar 
 )
+
+router.delete('/:id', excluirController.excluir)
 
 module.exports = router
