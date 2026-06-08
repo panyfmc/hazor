@@ -2,7 +2,8 @@ const {sql} = require('../config/database')
 
 async function listar() {
 
-    const result = await sql.query(`
+    const result = await sql
+    .query(`
         SELECT
             Id,
             Nome
