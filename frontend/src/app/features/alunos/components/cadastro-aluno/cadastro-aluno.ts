@@ -1,10 +1,13 @@
-import { Component, EventEmitter, Output, OnInit, inject, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Component, EventEmitter, Output, OnInit, inject, HostListener } from '@angular/core'
+import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
 import { RegiaoService } from '../../../../core/services/regiao-service'
 import { IgrejaService } from '../../../../core/services/igreja-service'
 import { GrupoService } from '../../../../core/services/grupo-service'
 import { CriarAluno, CadastroAlunoForm } from '../../../../shared/models/aluno-models'
+import { Regiao } from '../../../../shared/models/regiao-model'
+import { Igreja } from '../../../../shared/models/igreja-model'
+import { Grupo } from '../../../../shared/models/grupo-model'
 
 
 @Component({
@@ -33,9 +36,9 @@ export class CadastroAluno implements OnInit {
   @Output() fechar = new EventEmitter<void>()
   @Output() salvar = new EventEmitter<CriarAluno>()
 
-  regioes: any[] = []
-  igrejas: any[] = []
-  grupos: any[] = []
+  regioes: Regiao[] = []
+  igrejas: Igreja[] = []
+  grupos: Grupo[] = []
 
   ngOnInit() {
     this.carregarRegioes()
@@ -72,9 +75,9 @@ export class CadastroAluno implements OnInit {
     })
   }
 
-  dropdownRegiaoAberto = false;
-  dropdownIgrejaAberto = false;
-  dropdownGrupoAberto = false;
+  dropdownRegiaoAberto = false
+  dropdownIgrejaAberto = false
+  dropdownGrupoAberto = false
 
   toggleDropdownRegiao() {
     this.dropdownRegiaoAberto = !this.dropdownRegiaoAberto
@@ -93,64 +96,64 @@ export class CadastroAluno implements OnInit {
   }
 
   toggleDropdownGrupo() {
-    this.dropdownGrupoAberto = !this.dropdownGrupoAberto;
+    this.dropdownGrupoAberto = !this.dropdownGrupoAberto
     if (this.dropdownGrupoAberto) {
-      this.dropdownRegiaoAberto = false;
-      this.dropdownIgrejaAberto = false;
+      this.dropdownRegiaoAberto = false
+      this.dropdownIgrejaAberto = false
     }
 }
 
   selecionarRegiao(id: number) {
-    this.formulario.regiaoId = id;
-    this.dropdownRegiaoAberto = false;
-    this.carregarIgrejas(); // Dispara sua função existente
+    this.formulario.regiaoId = id
+    this.dropdownRegiaoAberto = false
+    this.carregarIgrejas() // Dispara sua função existente
   }
 
   selecionarIgreja(id: number | null) {
-    this.formulario.igrejaId = id;
-    this.dropdownIgrejaAberto = false;
+    this.formulario.igrejaId = id
+    this.dropdownIgrejaAberto = false
   }
 
   selecionarGrupo(id: number | null) {
-    this.formulario.grupoId = id;
-    this.dropdownGrupoAberto = false;
+    this.formulario.grupoId = id
+    this.dropdownGrupoAberto = false
   }
 
   getRegiaoSelecionadaNome(): string {
     if (!this.formulario.regiaoId || this.formulario.regiaoId === 0) {
-      return 'Selecione uma região';
+      return 'Selecione uma região'
     }
-    const regiao = this.regioes.find(r => r.id === this.formulario.regiaoId);
-    return regiao ? regiao.nome : 'Selecione uma região';
+    const regiao = this.regioes.find(r => r.id === this.formulario.regiaoId)
+    return regiao ? regiao.nome : 'Selecione uma região'
   }
 
   getIgrejaSelecionadaNome(): string {
     if (this.formulario.igrejaId === null || this.formulario.igrejaId === undefined) {
-      return 'Selecione uma igreja';
+      return 'Selecione uma igreja'
     }
-    const igreja = this.igrejas?.find(i => i.id === this.formulario.igrejaId);
-    return igreja ? igreja.nome : 'Selecione uma igreja';
+    const igreja = this.igrejas?.find(i => i.id === this.formulario.igrejaId)
+    return igreja ? igreja.nome : 'Selecione uma igreja'
   }
 
   getGrupoSelecionadaNome(): string {
     if (this.formulario.grupoId === null || this.formulario.grupoId === undefined) {
-      return 'Selecione';
+      return 'Selecione'
     }
-    const grupo = this.grupos?.find(g => g.id === this.formulario.grupoId);
-    return grupo ? grupo.nome : 'Selecione';
+    const grupo = this.grupos?.find(g => g.id === this.formulario.grupoId)
+    return grupo ? grupo.nome : 'Selecione'
   }
 
   // Opcional: Fechar o dropdown se o usuário clicar fora dele
   @HostListener('document:click', ['$event'])
   cliqueFora(event: Event) {
-    const alvo = event.target as HTMLElement;
+    const alvo = event.target as HTMLElement
 
     if (alvo.closest('.relative')) {
-      return;
+      return
     }
 
     if (alvo.closest('button[type="submit"]') || alvo.closest('.fechar-modal-btn')) {
-      return;
+      return
     }
     
     this.dropdownRegiaoAberto = false
@@ -161,7 +164,7 @@ export class CadastroAluno implements OnInit {
   
 
   fecharModal() {
-    this.fechar.emit();
+    this.fechar.emit()
   }
 
   onSubmit() {
@@ -186,6 +189,6 @@ export class CadastroAluno implements OnInit {
     }
 
     this.salvar.emit(aluno)
-    this.fecharModal();
+    this.fecharModal()
   }
 }
