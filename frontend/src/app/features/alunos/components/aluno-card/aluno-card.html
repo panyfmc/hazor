@@ -27,11 +27,11 @@
       <div class="flex items-center gap-2">
         
         <span
-          class="rounded-full px-3 py-1 text-xs font-semibold"
+          class="rounded-full px-3 py-1 text-xs font-semibold text-white"
           [ngClass]="{
-            'bg-green-100 text-green-700' : aluno.grupo.toLowerCase() === 'oficina',
-            'bg-violet-100 text-violet-700' : aluno.grupo.toLowerCase() === 'cpm',
-            'bg-blue-100 text-blue-700' : aluno.grupo.toLowerCase() === 'mídia' || aluno.grupo.toLowerCase() === 'midia'
+            'bg-green-400' : aluno.grupo.toLowerCase() === 'oficina',
+            'bg-violet-600' : aluno.grupo.toLowerCase() === 'cpm',
+            'bg-blue-600' : aluno.grupo.toLowerCase() === 'mídia' || aluno.grupo.toLowerCase() === 'midia'
           }">
           {{ aluno.grupo }}
         </span>

@@ -38,7 +38,7 @@
         type="button"
         (click)="mudarCategoria('todos')"
         [class]="categoriaAtiva() === 'todos' 
-          ? 'rounded-2xl bg-blue-500 px-5 py-2.5 text-sm font-medium cursor-pointer text-white transition' 
+          ? 'rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 px-5 py-2.5 text-sm font-medium cursor-pointer text-white transition' 
           : 'rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm cursor-pointer font-medium text-slate-600 hover:bg-slate-50 transition'">
         Todos
       </button>
@@ -47,7 +47,7 @@
         type="button"
         (click)="mudarCategoria('oficina')"
         [class]="categoriaAtiva() === 'oficina' 
-          ? 'rounded-2xl bg-blue-500 px-5 py-2.5 text-sm font-medium cursor-pointer text-white transition' 
+          ? 'rounded-2xl bg-gradient-to-br from-green-400 to-blue-600 px-5 py-2.5 text-sm font-medium cursor-pointer text-white transition' 
           : 'rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm cursor-pointer font-medium text-slate-600 hover:bg-slate-50 transition'">
         Oficina
       </button>
@@ -55,7 +55,7 @@
         type="button"
         (click)="mudarCategoria('cpm')"
         [class]="categoriaAtiva() === 'cpm' 
-          ? 'rounded-2xl bg-blue-500 px-5 py-2.5 text-sm font-medium cursor-pointer text-white transition' 
+          ? 'rounded-2xl bg-gradient-to-br from-violet-400 to-blue-600 px-5 py-2.5 text-sm font-medium cursor-pointer text-white transition' 
           : 'rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm cursor-pointer font-medium text-slate-600 hover:bg-slate-50 transition'">
         CPM
       </button>
@@ -64,7 +64,7 @@
         type="button"
         (click)="mudarCategoria('midia')"
         [class]="categoriaAtiva() === 'midia' 
-          ? 'rounded-2xl bg-blue-500 px-5 py-2.5 text-sm font-medium cursor-pointer text-white transition' 
+          ? 'rounded-2xl bg-gradient-to-br from-blue-900 to-blue-600 px-5 py-2.5 text-sm font-medium cursor-pointer text-white transition' 
           : 'rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm cursor-pointer font-medium text-slate-600 hover:bg-slate-50 transition'">
         Mídia
       </button>
