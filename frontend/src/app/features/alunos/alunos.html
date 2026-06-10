@@ -51,6 +51,14 @@
           : 'rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm cursor-pointer font-medium text-slate-600 hover:bg-slate-50 transition'">
         Oficina
       </button>
+      <button
+        type="button"
+        (click)="mudarCategoria('cpm')"
+        [class]="categoriaAtiva() === 'cpm' 
+          ? 'rounded-2xl bg-blue-500 px-5 py-2.5 text-sm font-medium cursor-pointer text-white transition' 
+          : 'rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm cursor-pointer font-medium text-slate-600 hover:bg-slate-50 transition'">
+        CPM
+      </button>
 
       <button
         type="button"
@@ -83,15 +91,8 @@
     } -->
   @for(aluno of alunosFiltrados(); track aluno.id){
     <app-aluno-card
-      [nomeCompleto]="aluno.nomeCompleto"
-      [igreja]="aluno.igreja"
-      [regiao]="aluno.regiao"
-      [grupo]="aluno.grupo"
-      [dataIngresso]="aluno.dataIngresso"
-      [frequenciaAtual]="aluno.frequenciaAtual"
-      [frequenciaMeta]="aluno.frequenciaMeta"
-      [atividadesAtual]="aluno.atividadesAtual"
-      [atividadesMeta]="aluno.atividadesMeta">
+      [aluno]="aluno"
+      (editarAluno)="prepararEdicao($event)">
     </app-aluno-card>
   } @empty {
     <div class="col-span-full text-center py-8">
@@ -107,4 +108,15 @@
     (fechar)="fecharModal()" 
     (salvar)="cadastrarAluno($event)">
   </app-cadastro-aluno>
+}
+
+@if (mostrarModalEdicao) {
+  <app-editar-aluno
+    [aluno]="alunoParaEditar()"
+    [regioes]="regioes()"
+    [igrejas]="igrejas()"
+    [grupos]="grupos()"
+    (fechar)="fecharModalEdicao()"
+    (salvar)="salvarEdicao($event)">
+  </app-editar-aluno>
 }
