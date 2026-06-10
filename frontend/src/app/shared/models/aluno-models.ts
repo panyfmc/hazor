@@ -4,6 +4,9 @@ export interface Aluno {
   igreja: string
   regiao: string
   grupo: string
+  igrejaId: number
+  regiaoId: number
+  grupoId: number
   dataIngresso: string
   ativo: boolean
   dataInativacao?: string | null
@@ -29,12 +32,13 @@ export interface CadastroAlunoForm {
   dataIngresso: string
 }
 
-export interface EditarAluno {
+export interface EditarAlunoForm {
+  id: number
   nomeCompleto: string
-  igrejaId: number | null
   regiaoId: number | null
+  igrejaId: number | null
   grupoId: number | null
   dataIngresso: string
   ativo: boolean
-  dataInativacao?: string | null
+  dataInativacao: string
 }
