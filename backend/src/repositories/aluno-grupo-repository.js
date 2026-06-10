@@ -1,23 +1,36 @@
 const {sql} = require('../config/database')
 
 async function criar(alunoId, grupoId, dataIngresso) {
+
     await new sql.Request()
         .input('alunoId', sql.Int, alunoId)
         .input('grupoId', sql.Int, grupoId)
         .input('dataIngresso', sql.Date, dataIngresso)
+
         .query(`
-            INSERT INTO AlunoGrupos
+            IF NOT EXISTS
             (
-                AlunoId,
-                GrupoId,
-                DataIngresso
+                SELECT 1
+                FROM AlunoGrupos
+                WHERE
+                    AlunoId = @alunoId
+                AND GrupoId = @grupoId
+                AND DataFim IS NULL
             )
-            VALUES
-            (
-                @alunoId,
-                @grupoId,
-                @dataIngresso
-            )
+            BEGIN
+                INSERT INTO AlunoGrupos
+                (
+                    AlunoId,
+                    GrupoId,
+                    DataIngresso
+                )
+                VALUES
+                (
+                    @alunoId,
+                    @grupoId,
+                    @dataIngresso
+                )
+            END
         `)
 }
 
