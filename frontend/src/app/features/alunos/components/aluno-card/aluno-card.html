@@ -20,7 +20,7 @@
 
       <div>
         <h3 class="text-lg font-bold text-slate-900">
-          {{ nomeCompleto }}
+          {{ aluno.nomeCompleto }}
         </h3>
       </div>
 
@@ -29,11 +29,11 @@
         <span
           class="rounded-full px-3 py-1 text-xs font-semibold"
           [ngClass]="{
-            'bg-green-100 text-green-700' : grupo.toLowerCase() === 'oficina',
-            'bg-violet-100 text-violet-700' : grupo.toLowerCase() === 'cpm',
-            'bg-blue-100 text-blue-700' : grupo.toLowerCase() === 'mídia' || grupo.toLowerCase() === 'midia'
+            'bg-green-100 text-green-700' : aluno.grupo.toLowerCase() === 'oficina',
+            'bg-violet-100 text-violet-700' : aluno.grupo.toLowerCase() === 'cpm',
+            'bg-blue-100 text-blue-700' : aluno.grupo.toLowerCase() === 'mídia' || aluno.grupo.toLowerCase() === 'midia'
           }">
-          {{ grupo }}
+          {{ aluno.grupo }}
         </span>
 
         <!-- <button 
@@ -73,7 +73,7 @@
         </p>
 
         <p class="mt-1 text-sm font-medium text-slate-600">
-            {{ igreja }} • {{ regiao }}
+            {{ aluno.igreja }} • {{ aluno.regiao }}
         </p>
 
     </div>
@@ -85,7 +85,7 @@
         </p>
 
         <p class="mt-1 text-sm font-medium text-slate-700">
-            {{ dataIngresso | date:'dd/MM/yyyy' }}
+            {{ aluno.dataIngresso.substring(0, 10) }}
         </p>
 
     </div>

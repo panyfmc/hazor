@@ -10,12 +10,7 @@ import {  CommonModule } from '@angular/common'
   templateUrl: './aluno-card.html'
 })
 export class AlunoCard {
-  @Input() aluno!: any
-  @Input() nomeCompleto = ''
-  @Input() igreja = ''
-  @Input() regiao = ''
-  @Input() dataIngresso = ''
-  @Input() grupo = ''
+  @Input() aluno: any
   @Input() frequenciaAtual = 0
   @Input() frequenciaMeta = 0
   @Input() atividadesAtual = 0
@@ -30,9 +25,9 @@ export class AlunoCard {
   }
 
   onEdit() {
-    this.isMenuOpen = false
-    // Dispara o evento passando o objeto do aluno com os dados originais
     this.editarAluno.emit(this.aluno)
+
+    this.isMenuOpen = false
   }
 
   // Fecha o menu automaticamente se clicar em qualquer outro lugar da tela
