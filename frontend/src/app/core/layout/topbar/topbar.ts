@@ -1,10 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core'
+import { RouterModule } from '@angular/router'  
 
 
 @Component({
   selector: 'app-topbar',
   standalone: true,
-  templateUrl: './topbar.html'
+  imports: [RouterModule],
+  templateUrl: './topbar.html'  
 })
 export class Topbar {
 
