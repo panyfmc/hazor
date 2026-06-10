@@ -1,26 +1,31 @@
 import { Routes } from '@angular/router';
-import { DashboardLayout } from './core/layout/dashboard-layout/dashboard-layout'; // Ajuste o caminho
+import { DashboardLayout } from './core/layout/dashboard-layout/dashboard-layout'
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard/alunos',
-    pathMatch: 'full' // Redireciona o link inicial direto para os alunos
-  },
-  {
-    path: 'dashboard',
-    component: DashboardLayout, // O Layout envelopa as telas filhas
+    component: DashboardLayout,
     children: [
       {
-        path: 'alunos',
-        // Lazy Loading (Carrega a tela apenas quando o usuário acessa, deixando o app super rápido)
-        loadComponent: () => import('./features/alunos/alunos').then(m => m.Alunos)
+        path: '',
+        redirectTo: 'alunos',
+        pathMatch: 'full'
       },
-      // Exemplo de tela futura:
-      // {
-      //   path: 'oficinas',
-      //   loadComponent: () => import('./features/oficinas/oficinas').then(m => m.Oficinas)
-      // }
+      {
+        path: 'alunos',
+        loadComponent: () =>
+          import('./features/alunos/alunos').then(m => m.Alunos)
+      },
+      {
+        path: 'registros',
+        loadComponent: () =>
+          import('./features/registros/registros').then(m => m.Registros)
+      },
+      {
+        path: 'inativos',
+        loadComponent: () =>
+          import('./features/inativos/inativos').then(m => m.Inativos)
+      }
     ]
   }
-];
+]
