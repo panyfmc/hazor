@@ -9,11 +9,7 @@ export class IgrejaService {
   private http = inject(HttpClient)
 
   listarPorRegiao(regiaoId: number) {
-
-    return this.http.get<any[]>(
-      `http://localhost:3000/api/igrejas/regiao/${regiaoId}`
-    )
-
+    return this.http.get<any[]>(`http://localhost:3000/api/igrejas/regiao/${regiaoId}`)
   }
 
 }
