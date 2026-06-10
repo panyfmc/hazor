@@ -1,0 +1,122 @@
+<div class="mx-auto w-full p-4 sm:p-8">
+
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold text-slate-900">
+      Alunos
+    </h1>
+    <p class="mt-1 text-sm text-slate-500">
+      Gerencie participantes das oficinas e projetos.
+    </p>
+  </div>
+  
+
+  <section
+    class="mb-6 rounded-3xl border border-white/70 bg-white/70 p-4 sm:p-6 backdrop-blur-xl shadow-[0_8px_30px_rgba(59,130,246,0.08)]">
+
+    <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+
+      <div class="w-full lg:max-w-2xl">
+        <input
+          type="text"
+          #txt
+          [value]="termoPesquisa()"
+          (input)="termoPesquisa.set(txt.value)"
+          placeholder="Pesquisar por nome, igreja ou região"
+          class="w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-4 text-sm outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100">
+      </div>
+
+      <button
+      (click)="abrirModal()"
+        class="w-full lg:w-auto rounded-2xl bg-gradient-to-r cursor-pointer from-blue-500 to-cyan-400 px-5 py-3.5 font-medium text-white transition hover:scale-[1.02]">
+        Novo Aluno
+      </button>
+
+    </div>
+
+    <div class="mt-5 flex flex-wrap gap-2 sm:gap-3">
+      <button
+        type="button"
+        (click)="mudarCategoria('todos')"
+        [class]="categoriaAtiva() === 'todos' 
+          ? 'rounded-2xl bg-blue-500 px-5 py-2.5 text-sm font-medium cursor-pointer text-white transition' 
+          : 'rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm cursor-pointer font-medium text-slate-600 hover:bg-slate-50 transition'">
+        Todos
+      </button>
+
+      <button
+        type="button"
+        (click)="mudarCategoria('oficina')"
+        [class]="categoriaAtiva() === 'oficina' 
+          ? 'rounded-2xl bg-blue-500 px-5 py-2.5 text-sm font-medium cursor-pointer text-white transition' 
+          : 'rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm cursor-pointer font-medium text-slate-600 hover:bg-slate-50 transition'">
+        Oficina
+      </button>
+      <button
+        type="button"
+        (click)="mudarCategoria('cpm')"
+        [class]="categoriaAtiva() === 'cpm' 
+          ? 'rounded-2xl bg-blue-500 px-5 py-2.5 text-sm font-medium cursor-pointer text-white transition' 
+          : 'rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm cursor-pointer font-medium text-slate-600 hover:bg-slate-50 transition'">
+        CPM
+      </button>
+
+      <button
+        type="button"
+        (click)="mudarCategoria('midia')"
+        [class]="categoriaAtiva() === 'midia' 
+          ? 'rounded-2xl bg-blue-500 px-5 py-2.5 text-sm font-medium cursor-pointer text-white transition' 
+          : 'rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm cursor-pointer font-medium text-slate-600 hover:bg-slate-50 transition'">
+        Mídia
+      </button>
+    </div>
+
+  </section>
+  
+  <div
+    class="grid gap-6"
+    style="grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));">
+    
+    <!-- @for(aluno of alunos(); track aluno.id){
+        <app-aluno-card
+        [nomeCompleto]="aluno.nomeCompleto"
+        [igreja]="aluno.igreja"
+        [regiao]="aluno.regiao"
+        [grupo]="aluno.grupo"
+        [dataIngresso]="aluno.dataIngresso"
+        [frequenciaAtual]="0"
+        [frequenciaMeta]="6"
+        [atividadesAtual]="0"
+        [atividadesMeta]="6">
+        </app-aluno-card>
+    } -->
+  @for(aluno of alunosFiltrados(); track aluno.id){
+    <app-aluno-card
+      [aluno]="aluno"
+      (editarAluno)="prepararEdicao($event)">
+    </app-aluno-card>
+  } @empty {
+    <div class="col-span-full text-center py-8">
+      <p class="text-slate-500 text-sm">Nenhum aluno encontrado para esta pesquisa ou categoria.</p>
+    </div>
+  }
+  </div>
+
+</div>
+
+@if (mostrarModalCadastro) {
+  <app-cadastro-aluno 
+    (fechar)="fecharModal()" 
+    (salvar)="cadastrarAluno($event)">
+  </app-cadastro-aluno>
+}
+
+@if (mostrarModalEdicao) {
+  <app-editar-aluno
+    [aluno]="alunoParaEditar()"
+    [regioes]="regioes()"
+    [igrejas]="igrejas()"
+    [grupos]="grupos()"
+    (fechar)="fecharModalEdicao()"
+    (salvar)="salvarEdicao($event)">
+  </app-editar-aluno>
+}
