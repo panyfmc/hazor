@@ -8,6 +8,9 @@ import { CriarAluno, CadastroAlunoForm } from '../../../../shared/models/aluno-m
 import { Regiao } from '../../../../shared/models/regiao-model'
 import { Igreja } from '../../../../shared/models/igreja-model'
 import { Grupo } from '../../../../shared/models/grupo-model'
+import { RegiaoMapper } from '../../../../core/mappers/regiao-mapper'
+import { GrupoMapper } from '../../../../core/mappers/grupo-mapper'
+import { IgrejaMapper } from '../../../../core/mappers/igreja-mapper'
 
 
 @Component({
@@ -33,7 +36,7 @@ export class CadastroAluno implements OnInit {
     dataIngresso: ''
   }
 
-  @Output() fechar = new EventEmitter<void>()
+  @Output() fechar = new EventEmitter<void>() 
   @Output() salvar = new EventEmitter<CriarAluno>()
 
   regioes: Regiao[] = []
@@ -46,19 +49,13 @@ export class CadastroAluno implements OnInit {
   }
   carregarRegioes() {
     this.regiaoService.listar().subscribe(regioes => {
-      this.regioes = regioes.map(r => ({
-        id: r.Id,
-        nome: r.Nome
-      }))
+      this.regioes = regioes.map(RegiaoMapper.fromApi)
     })
   }
 
   carregarGrupos() {
     this.grupoService.listar().subscribe(grupos => {
-      this.grupos = grupos.map(g => ({
-        id: g.Id,
-        nome: g.Nome
-      }))
+      this.grupos = grupos.map(GrupoMapper.fromApi)
     })
   }
 
@@ -68,10 +65,7 @@ export class CadastroAluno implements OnInit {
       return
     }
     this.igrejaService.listarPorRegiao(this.formulario.regiaoId).subscribe(igrejas => {
-      this.igrejas = igrejas.map(i => ({
-        id: i.Id,
-        nome: i.Nome
-      }))
+      this.igrejas = igrejas.map(IgrejaMapper.fromApi)
     })
   }
 
@@ -160,8 +154,6 @@ export class CadastroAluno implements OnInit {
     this.dropdownIgrejaAberto = false
     this.dropdownGrupoAberto = false
   }
-
-  
 
   fecharModal() {
     this.fechar.emit()
