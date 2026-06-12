@@ -4,13 +4,13 @@ const inativarRepository = require('../repositories/inativar-aluno-repository')
 const reativarRepository = require('../repositories/reativar-aluno-repository')
 const alunoGrupoRepository = require('../repositories/aluno-grupo-repository')
 const gp_oficina = 1
+
 async function listar() {
     return await alunoRepository.listar()
 }
 
 async function criar(aluno) {
     const alunoCriado = await alunoRepository.criar(aluno) 
-    // console.log(alunoCriado)
     await alunoGrupoRepository.criar(
         alunoCriado.Id,
         aluno.grupoId,
