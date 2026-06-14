@@ -1,0 +1,69 @@
+const atividadeService = require('../services/atividade-service')
+
+async function criar(req, res) {
+    const atividade = await atividadeService.criar(
+        req.body.oficinaId
+    )
+    res.status(201).json(atividade)
+}
+
+async function buscarPorOficina(req, res) {
+    const atividade = await atividadeService.buscarPorOficina(
+        req.params.oficinaId
+    )
+    res.json(atividade)
+}
+
+async function encerrar(req, res) {
+    await atividadeService.encerrar(req.params.id)
+    res.sendStatus(204)
+}
+
+async function excluir(req, res) {
+    await atividadeService.excluir(
+        req.params.id
+    )
+    res.sendStatus(204)
+}
+
+async function criarEntrega(req, res) {
+    await atividadeService.criarEntrega(
+        req.body.atividadeId,
+        req.body.alunoId
+    )
+    res.sendStatus(201)
+}
+
+async function removerEntrega(req, res) {
+    await atividadeService.removerEntrega(
+        req.params.atividadeId,
+        req.params.alunoId
+    )
+    res.sendStatus(204)
+}
+
+async function listarPorAtividade(req, res) {
+    const entregas = await atividadeService.listarPorAtividade(
+        req.params.atividadeId
+    )
+    res.json(entregas)
+}
+
+async function editarEntregas(req, res) {
+    await atividadeService.editarEntregas(
+        req.params.atividadeId,
+        req.body.alunosIds
+    )
+    res.sendStatus(204)
+}
+
+module.exports = {
+    criar,
+    buscarPorOficina,
+    encerrar,
+    excluir,
+    criarEntrega,
+    removerEntrega,
+    listarPorAtividade,
+    editarEntregas
+}
