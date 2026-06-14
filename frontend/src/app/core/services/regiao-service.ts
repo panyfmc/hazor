@@ -9,7 +9,7 @@ export class RegiaoService {
   private http = inject(HttpClient)
 
   listar() {
-    return this.http.get<any[]>('http://localhost:3000/api/regioes')
+    return this.http.get<any[]>('http://localhost:3000/regioes')
   }
 
 }

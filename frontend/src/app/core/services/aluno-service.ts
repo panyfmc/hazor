@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http'
 export class AlunoService {
   private http = inject(HttpClient)
 
-  private apiUrl = 'http://localhost:3000/api/alunos'
+  private apiUrl = 'http://localhost:3000/alunos'
 
   listar() {
     return this.http.get<any[]>(this.apiUrl)

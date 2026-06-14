@@ -9,7 +9,7 @@ export class GrupoService {
   private http = inject(HttpClient)
 
   listar() {
-    return this.http.get<any[]>('http://localhost:3000/api/grupos')
+    return this.http.get<any[]>('http://localhost:3000/grupos')
   }
 
 }
