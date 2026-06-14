@@ -23,13 +23,15 @@ async function criar(temporada) {
             (
                 Nome,
                 DataInicio,
-                DataFim
+                DataFim,
+                Ativa
             )
             VALUES
             (
                 @nome,
                 @inicio,
-                @fim
+                @fim,
+                1
             )
         `)
 }
