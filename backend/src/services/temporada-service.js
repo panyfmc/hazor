@@ -5,10 +5,14 @@ async function listar() {
 }
 
 async function criar(temporada) {
-    await repository.criar(temporada)
+    return await repository.criar(temporada)
 }
 
+async function buscarAtiva() {
+    return await repository.buscarAtiva()
+}
 module.exports = {
     listar,
-    criar
+    criar,
+    buscarAtiva
 }
