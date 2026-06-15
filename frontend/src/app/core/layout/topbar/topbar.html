@@ -7,72 +7,52 @@
          backdrop-blur-xl
          shadow-[0_8px_30px_rgba(59,130,246,0.08)]">
 
-  <div class="flex h-full items-center justify-between px-6">
+  <div class="flex h-full items-center justify-between px-6 md:grid md:grid-cols-3">
 
-    <!-- ESQUERDA -->
-    <div class="flex items-center gap-4">
-
-      
-
+    <div class="flex items-center gap-4 justify-start">
       <div>
         <span class="hidden sm:block">
-
-          <p class="text-lg font-semibold text-slate-900">
+          <p class="text-lg font-semibold text-slate-900 leading-tight">
             Hazor
           </p>
-  
-          <p class="text-sm text-slate-900">
+          <p class="text-sm text-slate-500 leading-none">
             Services
           </p>
-
         </span>
+      </div>
+    </div>
+
+    <div class="flex justify-center">
+      <div
+        class="flex items-center gap-2 rounded-2xl bg-blue-50 p-2">
+        <a
+          routerLink="/alunos"
+          routerLinkActive="bg-gradient-to-br from-blue-800 to-cyan-400 text-white shadow-sm"
+          class="flex items-center gap-2 cursor-pointer rounded-xl px-4 py-2 text-slate-600 transition">
+          <i class="pi pi-home"></i>
+          <span class="hidden md:inline">Início</span>
+        </a>
+
+        <a
+          routerLink="/registros"
+          routerLinkActive="bg-gradient-to-br from-blue-800 to-cyan-400 text-white shadow-sm"
+          class="flex items-center gap-2 rounded-xl cursor-pointer px-4 py-2 text-slate-600 transition">
+          <i class="pi pi-file"></i>
+          <span class="hidden md:inline">Registros</span>
+        </a>
+
+        <a
+          routerLink="/inativos"
+          routerLinkActive="bg-gradient-to-br from-blue-800 to-cyan-400 text-white shadow-sm"
+          class="flex items-center gap-2 rounded-xl px-4 py-2 cursor-pointer text-slate-600 transition">
+          <i class="pi pi-ban"></i>
+          <span class="hidden md:inline">Inativos</span>
+        </a>
 
       </div>
-
     </div>
 
-    <!-- CENTRO -->
-    <div
-      class="flex items-center gap-2
-             rounded-2xl
-             bg-blue-50
-             p-2">
-
-      <a
-        routerLink="/alunos"
-        routerLinkActive="bg-gradient-to-br from-blue-800 to-cyan-400 text-white shadow-sm"
-        class="flex items-center gap-2 cursor-pointer rounded-xl px-4 py-2 text-slate-600 transition">
-
-        <i class="pi pi-home"></i>
-        <span class="hidden md:inline">Início</span>
-
-      </a>
-
-      <a
-        routerLink="/registros"
-        routerLinkActive="bg-gradient-to-br from-blue-800 to-cyan-400 text-white shadow-sm"
-        class="flex items-center gap-2 rounded-xl cursor-pointer px-4 py-2 text-slate-600 transition">
-
-        <i class="pi pi-file"></i>
-        <span class="hidden md:inline">Registros</span>
-
-      </a>
-
-      <a
-        routerLink="/inativos"
-        routerLinkActive="bg-gradient-to-br from-blue-800 to-cyan-400 text-white shadow-sm"
-        class="flex items-center gap-2 rounded-xl px-4 py-2 cursor-pointer text-slate-600 transition">
-
-        <i class="pi pi-ban"></i>
-        <span class="hidden md:inline">Inativos</span>
-
-      </a>
-
-    </div>
-
-    <!-- DIREITA -->
-    <div class="flex items-center gap-3">
-
+    <div class="flex items-center gap-3 justify-end">
       <div
         class="flex h-11 w-11 items-center justify-center
                rounded-2xl
@@ -81,24 +61,18 @@
                to-blue-800
                font-semibold
                text-white">
-
         A
-
       </div>
 
-      <div class="hidden lg:block">
-        <p class="text-lg font-semibold text-slate-900">
+      <div class="hidden lg:block text-left">
+        <p class="text-base font-semibold text-slate-900 leading-tight">
           Admin
         </p>
-
-        <p class="text-sm text-slate-500">
+        <p class="text-xs text-slate-500 mental leading-none">
           Administrador
         </p>
-
       </div>
-
     </div>
 
   </div>
-
 </nav>
