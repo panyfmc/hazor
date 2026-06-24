@@ -1,0 +1,176 @@
+<div class="w-full min-h-screen mx-auto max-w-[1600px] py-4 px-8">
+    <div class="bg-white mb-6 py-4 px-6 rounded-2xl">
+        <div class="flex items-center justify-between pb-6">
+            <button routerLink="/registros" class="group flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-900 transition cursor-pointer">
+            <i class="pi pi-arrow-left text-xs group-hover:-translate-x-0.5 transition-transform"></i>
+            Voltar
+            </button>
+            
+            <div class="flex items-center gap-1.5 text-xs font-medium text-slate-500">
+                <span>Período atual:</span>
+                <select (change)="mudarTemporada($event)" class="font-bold text-slate-900 bg-transparent outline-none cursor-pointer border-none p-0 focus:ring-0">
+                    <option [value]="temporada()?.Id" selected>{{temporada()?.Nome}}</option>
+                </select>
+            </div>
+        </div>
+      
+        <div class="pb-2">
+            <div class="pb-4">
+                <h1 class="text-2xl font-bold tracking-tight text-slate-900">Histórico das oficinas</h1>
+                <p class="text-xs text-slate-400 mt-1">Todas as oficinas listadas do período selecionado.</p>
+            </div>
+      
+            <div class="inline-flex items-center gap-2 rounded-2xl border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm">
+                <span>Total de Oficinas</span>
+                <span class="flex h-5 min-w-5 items-center justify-center rounded-full bg-slate-100 px-1 text-[11px] font-bold text-slate-900">
+                {{ oficinas().length }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white py-6 px-6 rounded-2xl">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-8 border-slate-100 pb-5">
+          
+          <div class="relative w-full sm:max-w-xs">
+            <i class="pi pi-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input
+              type="text"
+              placeholder="Buscar por data"
+              (input)="buscarPorData($event)"
+              class="w-full rounded-full border border-slate-200 bg-white pl-10 pr-4 py-2.5 text-sm outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-100">
+          </div>
+      
+          <div class="flex flex-wrap items-center gap-2">
+            <button type="button" (click)="departamentoSelecionado.set('')"
+              [class]="departamentoSelecionado() === '' ? 'rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white transition cursor-pointer shadow-sm' : 'rounded-full border border-slate-200 bg-white px-5 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 transition cursor-pointer'">
+              Todas
+            </button>
+      
+            <button type="button" (click)="departamentoSelecionado.set('3')"
+              [class]="departamentoSelecionado() === '3' ? 'rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white transition cursor-pointer shadow-sm' : 'rounded-full border border-slate-200 bg-white px-5 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 transition cursor-pointer'">
+              Design
+            </button>
+      
+            <button type="button" (click)="departamentoSelecionado.set('1')"
+              [class]="departamentoSelecionado() === '1' ? 'rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white transition cursor-pointer shadow-sm' : 'rounded-full border border-slate-200 bg-white px-5 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 transition cursor-pointer'">
+              Fotografia
+            </button>
+      
+            <button type="button" (click)="departamentoSelecionado.set('2')"
+              [class]="departamentoSelecionado() === '2' ? 'rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white transition cursor-pointer shadow-sm' : 'rounded-full border border-slate-200 bg-white px-5 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 transition cursor-pointer'">
+              Produção
+            </button>
+          </div>
+        </div>
+      
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                <tr class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 border-b border-slate-100">
+                    <th class="pb-3 w-8"></th>
+                    <th class="pb-3 w-40">Data</th>
+                    <th class="pb-3">Departamento</th>
+                    <th class="pb-3 text-center w-40">Presença</th>
+                    <th class="pb-3 text-center w-40">Atividade</th>
+                    <th class="pb-3 text-right w-16"></th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-xs font-medium text-slate-600">
+                @for (oficina of oficinasFiltradasPaginadas(); track oficina.Id) {
+                    <tr class="hover:bg-slate-50/60 transition-colors group">
+                    <td class="py-4 pl-1">
+                        <button class="p-1 rounded text-slate-300 group-hover:text-slate-500 transition cursor-pointer">
+                        <i class="pi pi-chevron-down text-[10px]"></i>
+                        </button>
+                    </td>
+                    <td class="py-4 text-slate-900 font-semibold">
+                        {{ oficina.DataAula.split('-')[2].substring(0,2) }}-{{ oficina.DataAula.split('-')[1] }}-{{ oficina.DataAula.split('-')[0] }}
+                    </td>
+                    <td class="py-4">
+                        <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-1 text-[10px] font-medium text-slate-800 tracking-wide">
+                        {{ oficina.DepartamentoId === 3 ? 'Design' : (oficina.DepartamentoId === 1 ? 'Fotografia' : 'Produção') }}
+                        </span>
+                    </td>
+                    <td class="py-4 text-center font-medium text-slate-700">
+                        {{ oficina.TotalPresentes || 0 }} de {{ totalAlunosAtivos() }}
+                    </td>
+                    <td class="py-4 text-center">
+                        <span [class]="oficina.TeveAtividade ? 'text-emerald-600' : 'text-slate-400'">
+                        {{ oficina.TeveAtividade ? 'Sim' : 'Não' }}
+                        </span>
+                    </td>
+                    
+                    <td class="py-4 text-right relative">
+                        <button (click)="alternarMenu(oficina.Id, $event)" class="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition cursor-pointer">
+                        <i class="pi pi-ellipsis-v text-xs"></i>
+                        </button>
+        
+                        @if (menuAbertoId() === oficina.Id) {
+                        <div class="absolute right-0 mt-1 w-28 rounded-xl bg-white p-1 shadow-lg border border-slate-100 z-10 animate-in fade-in slide-in-from-top-1 duration-150">
+                            <button (click)="editar(oficina)" class="w-full text-left px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer transition">
+                            Editar
+                            </button>
+                            <button (click)="confirmarExclusao(oficina.Id)" class="w-full text-left px-3 py-2 text-xs font-medium text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer transition">
+                            Excluir
+                            </button>
+                        </div>
+                        }
+                    </td>
+                    </tr>
+                } @empty {
+                    <tr>
+                    <td colspan="6" class="py-16 text-center text-slate-400 italic">
+                        Nenhuma oficina corresponde aos critérios aplicados.
+                    </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+            @if (oficinaParaExcluirId()) {
+                <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-200">
+                    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-xl border border-slate-100 space-y-6 animate-in zoom-in-95 duration-200">
+                    <div class="space-y-2">
+                        <h3 class="text-base font-bold text-slate-900">Excluir esta oficina?</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">Essa ação não poderá ser desfeita. Todos os registros de presença vinculados a esta data serão permanentemente removidos.</p>
+                    </div>
+                    <div class="flex items-center gap-3 justify-end text-xs font-semibold">
+                        <button (click)="oficinaParaExcluirId.set(null)" class="px-4 py-2.5 rounded-full text-slate-500 hover:text-slate-800 transition cursor-pointer">
+                        Cancelar
+                        </button>
+                        <button (click)="executarExclusao()" class="px-5 py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white shadow-sm transition cursor-pointer">
+                        Sim, excluir
+                        </button>
+                    </div>
+                    </div>
+                </div>
+            }
+        </div>
+      
+        <div class="flex items-center justify-between border-t border-slate-100 pt-4 mt-4 text-xs font-medium text-slate-500">
+            <div>
+                Exibindo página <span class="text-slate-900 font-bold">{{ paginaAtual() }}</span> de <span class="text-slate-900 font-bold">{{ totalPaginas() }}</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button 
+                    (click)="paginaAnterior()" 
+                    [disabled]="paginaAtual() === 1"
+                    class="inline-flex items-center gap-1 px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:hover:bg-white transition cursor-pointer disabled:cursor-not-allowed shadow-sm">
+                    <i class="pi pi-chevron-left text-[10px]"></i>
+                    Anterior
+                </button>
+                
+                <button 
+                    (click)="proximaPagina()" 
+                    [disabled]="paginaAtual() === totalPaginas()"
+                    class="inline-flex items-center gap-1 px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:hover:bg-white transition cursor-pointer disabled:cursor-not-allowed shadow-sm">
+                    Próximo
+                    <i class="pi pi-chevron-right text-[10px]"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+  
+</div>
