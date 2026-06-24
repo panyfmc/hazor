@@ -5,9 +5,9 @@
             <i class="pi pi-arrow-left text-xs group-hover:-translate-x-0.5 transition-transform"></i>
             Voltar
             </button>
-            
+        <span class="text-xs font-semibold text-slate-700">{{ temporada()?.Nome }}</span>
             <div class="flex items-center gap-1.5 text-xs font-medium text-slate-500">
-                <span>Período atual:</span>
+                <span class="text-xs font-medium text-slate-400">Período atual: </span>
                 <select (change)="mudarTemporada($event)" class="font-bold text-slate-900 bg-transparent outline-none cursor-pointer border-none p-0 focus:ring-0">
                     <option [value]="temporada()?.Id" selected>{{temporada()?.Nome}}</option>
                 </select>
@@ -79,44 +79,44 @@
                 <tbody class="divide-y divide-slate-100 text-xs font-medium text-slate-600">
                 @for (oficina of oficinasFiltradasPaginadas(); track oficina.Id) {
                     <tr class="hover:bg-slate-50/60 transition-colors group">
-                    <td class="py-4 pl-1">
-                        <button class="p-1 rounded text-slate-300 group-hover:text-slate-500 transition cursor-pointer">
-                        <i class="pi pi-chevron-down text-[10px]"></i>
-                        </button>
-                    </td>
-                    <td class="py-4 text-slate-900 font-semibold">
-                        {{ oficina.DataAula.split('-')[2].substring(0,2) }}-{{ oficina.DataAula.split('-')[1] }}-{{ oficina.DataAula.split('-')[0] }}
-                    </td>
-                    <td class="py-4">
-                        <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-1 text-[10px] font-medium text-slate-800 tracking-wide">
-                        {{ oficina.DepartamentoId === 3 ? 'Design' : (oficina.DepartamentoId === 1 ? 'Fotografia' : 'Produção') }}
-                        </span>
-                    </td>
-                    <td class="py-4 text-center font-medium text-slate-700">
-                        {{ oficina.TotalPresentes || 0 }} de {{ totalAlunosAtivos() }}
-                    </td>
-                    <td class="py-4 text-center">
-                        <span [class]="oficina.TeveAtividade ? 'text-emerald-600' : 'text-slate-400'">
-                        {{ oficina.TeveAtividade ? 'Sim' : 'Não' }}
-                        </span>
-                    </td>
-                    
-                    <td class="py-4 text-right relative">
-                        <button (click)="alternarMenu(oficina.Id, $event)" class="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition cursor-pointer">
-                        <i class="pi pi-ellipsis-v text-xs"></i>
-                        </button>
-        
-                        @if (menuAbertoId() === oficina.Id) {
-                        <div class="absolute right-0 mt-1 w-28 rounded-xl bg-white p-1 shadow-lg border border-slate-100 z-10 animate-in fade-in slide-in-from-top-1 duration-150">
-                            <button (click)="editar(oficina)" class="w-full text-left px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer transition">
-                            Editar
+                        <td class="py-4 pl-1">
+                            <button class="p-1 rounded text-slate-300 group-hover:text-slate-500 transition cursor-pointer">
+                            <i class="pi pi-chevron-down text-[10px]"></i>
                             </button>
-                            <button (click)="confirmarExclusao(oficina.Id)" class="w-full text-left px-3 py-2 text-xs font-medium text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer transition">
-                            Excluir
+                        </td>
+                        <td class="py-4 text-slate-900 font-semibold">
+                            {{ oficina.DataAula.split('-')[2].substring(0,2) }}-{{ oficina.DataAula.split('-')[1] }}-{{ oficina.DataAula.split('-')[0] }}
+                        </td>
+                        <td class="py-4">
+                            <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-1 text-[10px] font-medium text-slate-800 tracking-wide">
+                            {{ oficina.DepartamentoId === 3 ? 'Design' : (oficina.DepartamentoId === 1 ? 'Fotografia' : 'Produção') }}
+                            </span>
+                        </td>
+                        <td class="py-4 text-center font-medium text-slate-700">
+                            {{ oficina.TotalPresentes || 0 }} de {{ totalAlunosAtivos() }}
+                        </td>
+                        <td class="py-4 text-center">
+                            <span [class]="oficina.TeveAtividade ? 'text-emerald-600' : 'text-slate-400'">
+                            {{ oficina.TeveAtividade ? 'Sim' : 'Não' }}
+                            </span>
+                        </td>
+                        
+                        <td class="py-4 text-right relative">
+                            <button (click)="alternarMenu(oficina.Id, $event)" class="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition cursor-pointer">
+                            <i class="pi pi-ellipsis-v text-xs"></i>
                             </button>
-                        </div>
-                        }
-                    </td>
+            
+                            @if (menuAbertoId() === oficina.Id) {
+                                <div class="absolute right-0 mt-1 w-28 rounded-xl bg-white p-1 shadow-lg border border-slate-100 z-10 animate-in fade-in slide-in-from-top-1 duration-150">
+                                    <button (click)="editar(oficina)" class="w-full text-left px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer transition">
+                                    Editar
+                                    </button>
+                                    <button (click)="confirmarExclusao(oficina.Id)" class="w-full text-left px-3 py-2 text-xs font-medium text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer transition">
+                                    Excluir
+                                    </button>
+                                </div>
+                            }
+                        </td>
                     </tr>
                 } @empty {
                     <tr>
