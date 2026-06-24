@@ -1,24 +1,35 @@
 const {sql} = require('../config/database')
 
-async function listar() {
-    const result = await new sql.Request()
-        .query(`
-            SELECT
-                O.*,
-                COUNT(P.Id) AS TotalPresentes
-            FROM Oficinas O
-            LEFT JOIN Presencas P
-                ON P.OficinaId = O.Id
-            GROUP BY
-                O.Id,
-                O.TemporadaId,
-                O.DepartamentoId,
-                O.DataAula,
-                O.TeveAtividade
-            ORDER BY O.DataAula DESC
-        `)
+async function listar(temporadaId) {
+    const request = new sql.Request();
+    
+    let query = `
+        SELECT
+            O.*,
+            COUNT(P.Id) AS TotalPresentes
+        FROM Oficinas O
+        LEFT JOIN Presencas P
+            ON P.OficinaId = O.Id
+    `;
 
-    return result.recordset
+    // Se vier uma temporada do Front, aplica o filtro antes do GROUP BY
+    if (temporadaId) {
+        query += ` WHERE O.TemporadaId = @temporadaId `;
+        request.input('temporadaId', sql.Int, temporadaId);
+    }
+
+    query += `
+        GROUP BY
+            O.Id,
+            O.TemporadaId,
+            O.DepartamentoId,
+            O.DataAula,
+            O.TeveAtividade
+        ORDER BY O.DataAula DESC
+    `;
+
+    const result = await request.query(query);
+    return result.recordset;
 }
 
 async function criar(aula) {

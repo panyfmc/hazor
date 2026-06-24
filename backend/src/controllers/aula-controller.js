@@ -2,14 +2,14 @@ const aulaService = require('../services/aula-service')
 
 async function listar(req, res) {
     try {
-        const aulas = await aulaService.listar()
+        const { temporadaId } = req.query
+        const aulas = await aulaService.listar(temporadaId)
         res.json(aulas)
     } catch(error) {
         res.status(400).json({
             mensagem: error.message
         })
-    }
-    
+    }  
 }
 
 async function criar(req, res) {

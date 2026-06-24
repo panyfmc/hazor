@@ -4,8 +4,8 @@ const atividadeRepository = require('../repositories/atividade-repository')
 const entregaRepository = require('../repositories/entrega-repository')
 const temporadaRepository = require('../repositories/temporada-repository')
 
-async function listar() {
-    return await oficinaRepository.listar()
+async function listar(temporadaId) {
+    return await oficinaRepository.listar(temporadaId)
 }
 
 async function buscarPorId(id) {
