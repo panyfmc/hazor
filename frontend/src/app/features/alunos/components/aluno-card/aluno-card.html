@@ -85,7 +85,7 @@
         </p>
 
         <p class="mt-1 text-sm font-medium text-slate-700">
-            {{ aluno.dataIngresso.substring(0, 10) }}
+            {{ aluno.dataIngresso.split('-')[2].substring(0, 2)}}/{{ aluno.dataIngresso.split('-')[1].substring(0, 2)}}/{{ aluno.dataIngresso.split('-')[0].substring(0, 4)}}
         </p>
 
     </div>
