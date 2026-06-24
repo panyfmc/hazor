@@ -11,8 +11,15 @@ async function criar(req, res) {
 }
 
 async function buscarAtiva(req, res) {
-    const temporada = await service.buscarAtiva(req.body)
-    res.json(temporada)
+    try {
+        const temporada = await service.buscarAtiva() 
+        if (!temporada) {
+            return res.status(404).json({ message: "Nenhuma temporada ativa encontrada." })
+        }
+        res.json(temporada)
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
 }
 
 module.exports = {
