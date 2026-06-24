@@ -18,9 +18,20 @@ export const routes: Routes = [
       },
       {
         path: 'registros',
-        loadComponent: () =>
-          import('./features/registros/registros').then(m => m.Registros)
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('./features/registros/registros').then(m => m.Registros)
+
+          },
+
+          {
+            path: 'historico-aulas',
+            loadComponent: () => import('./features/registros/componentes/historico-completo/historico-completo').then(m => m.HistoricoCompleto)
+          } 
+        ]
       },
+        
       {
         path: 'inativos',
         loadComponent: () =>
