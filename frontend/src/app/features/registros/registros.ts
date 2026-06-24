@@ -2,13 +2,14 @@ import { Component, inject, OnInit, signal, effect, computed } from '@angular/co
 import { temporadaService } from '../../core/services/temporada-services'
 import { aulaService } from '../../core/services/aulas-services'
 import { CommonModule } from '@angular/common'
+import { RouterModule } from '@angular/router'
 import { AlunoService } from '../../core/services/aluno-service'
 import { AlunoMapper } from '../../core/mappers/aluno-mapper'
 
 @Component({
   selector: 'app-registros',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './registros.html'
 })
 export class Registros implements OnInit {
