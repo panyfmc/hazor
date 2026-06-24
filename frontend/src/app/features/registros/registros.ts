@@ -2,6 +2,8 @@ import { Component, inject, OnInit, signal, effect, computed } from '@angular/co
 import { temporadaService } from '../../core/services/temporada-services'
 import { aulaService } from '../../core/services/aulas-services'
 import { CommonModule } from '@angular/common'
+import { AlunoService } from '../../core/services/aluno-service'
+import { AlunoMapper } from '../../core/mappers/aluno-mapper'
 
 @Component({
   selector: 'app-registros',
@@ -12,12 +14,18 @@ import { CommonModule } from '@angular/common'
 export class Registros implements OnInit {
   private temporadaService = inject(temporadaService)
   private aulaService = inject(aulaService)
+  private alunoService = inject(AlunoService)
   // Inicializa a temporada como um Signal
   temporada = signal<any>(null)
   oficinas = signal<any[]>([])
+  alunos = signal<any[]>([])
 
   limiteExibicao = computed(() => {
     return this.oficinas().slice(0, 5)
+  })
+
+  totalAlunosAtivos = computed(() => {
+    return this.alunos().length
   })
 
   constructor() {
@@ -33,6 +41,7 @@ export class Registros implements OnInit {
     this.temporadaService.buscarAtiva().subscribe(res => {
       this.temporada.set(res)
     })
+    this.carregarAlunos()   // carrega a quantidade de alunos assim que a tela abre
   }
 
   private carregarAulas(temporadaId: number) {
@@ -40,4 +49,14 @@ export class Registros implements OnInit {
       this.oficinas.set(res) // Alimenta o signal das oficinas
     })
   }
+
+  carregarAlunos() {
+      this.alunoService.listar().subscribe({
+        next: (dados: any[]) => {
+          const mapeado = dados.map(AlunoMapper.fromApi)
+          this.alunos.set(mapeado) 
+        },
+        error: (erro) => console.error(erro)
+      })
+    }
 }
