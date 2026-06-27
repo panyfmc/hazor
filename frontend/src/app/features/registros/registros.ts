@@ -40,11 +40,25 @@ export class Registros implements OnInit {
     })
   }
 
+  totalFotografia = computed(() => {
+    return this.oficinas().filter(o => o.DepartamentoId === 1).length
+  })
+
+  totalProducao = computed(() => {
+    return this.oficinas().filter(o => o.DepartamentoId === 2).length
+  })
+
+  totalDesign = computed(() => {
+    return this.oficinas().filter(o => o.DepartamentoId === 3).length
+  })
+
   ngOnInit() {
     this.temporadaService.buscarAtiva().subscribe(res => {
       this.temporada.set(res)
     })
     this.carregarAlunos()   // carrega a quantidade de alunos assim que a tela abre
+
+
   }
 
   private carregarAulas(temporadaId: number) {
