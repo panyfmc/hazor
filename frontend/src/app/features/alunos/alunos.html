@@ -71,30 +71,39 @@
   <div
     class="grid gap-6"
     style="grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));">
-    
-    <!-- @for(aluno of alunos(); track aluno.id){
-        <app-aluno-card
-        [nomeCompleto]="aluno.nomeCompleto"
-        [igreja]="aluno.igreja"
-        [regiao]="aluno.regiao"
-        [grupo]="aluno.grupo"
-        [dataIngresso]="aluno.dataIngresso"
-        [frequenciaAtual]="0"
-        [frequenciaMeta]="6"
-        [atividadesAtual]="0"
-        [atividadesMeta]="6">
-        </app-aluno-card>
-    } -->
-  @for(aluno of alunosFiltrados(); track aluno.id){
-    <app-aluno-card
-      [aluno]="aluno"
-      (editarAluno)="prepararEdicao($event)">
-    </app-aluno-card>
-  } @empty {
-    <div class="col-span-full text-center py-8">
-      <p class="text-slate-500 text-sm">Nenhum aluno encontrado para esta pesquisa ou categoria.</p>
+    @for(aluno of alunosFiltradasPaginadas(); track aluno.id){
+      <app-aluno-card
+        [aluno]="aluno"
+        (editarAluno)="prepararEdicao($event)">
+      </app-aluno-card>
+    } @empty {
+      <div class="col-span-full text-center py-8">
+        <p class="text-slate-500 text-sm">Nenhum aluno encontrado para esta pesquisa ou categoria.</p>
+      </div>
+    }
+    <div class="flex items-center justify-between border-t border-slate-100 pt-4 mt-4 text-xs font-medium text-slate-500">
+    <div>
+        Exibindo página <span class="text-slate-900 font-bold">{{ paginaAtual() }}</span> de <span class="text-slate-900 font-bold">{{ totalPaginas() }}</span>
     </div>
-  }
+
+    <div class="flex items-center gap-2">
+        <button 
+            (click)="paginaAnterior()" 
+            [disabled]="paginaAtual() === 1"
+            class="inline-flex items-center gap-1 px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:hover:bg-white transition cursor-pointer disabled:cursor-not-allowed shadow-sm">
+            <i class="pi pi-chevron-left text-[10px]"></i>
+            Anterior
+        </button>
+        
+        <button 
+            (click)="proximaPagina()" 
+            [disabled]="paginaAtual() === totalPaginas()"
+            class="inline-flex items-center gap-1 px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:hover:bg-white transition cursor-pointer disabled:cursor-not-allowed shadow-sm">
+            Próximo
+            <i class="pi pi-chevron-right text-[10px]"></i>
+        </button>
+    </div>
+
   </div>
 
 </div>

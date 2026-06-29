@@ -27,6 +27,8 @@ export class Alunos implements OnInit {
   mostrarModalCadastro = false 
   mostrarModalEdicao = false 
   alunoParaEditar = signal<any>(null)
+  paginaAtual = signal<number>(1)
+  itensPorPagina = 20
 
   // Injeções limpas
   private alunoService = inject(AlunoService)
@@ -74,6 +76,28 @@ export class Alunos implements OnInit {
   ngOnInit(): void {
     this.carregarAlunos()
     this.carregarDadosAuxiliares()
+  }
+
+  totalPaginas = computed(() => {
+    return Math.ceil(this.alunosFiltrados().length / this.itensPorPagina) || 1
+  })
+
+  alunosFiltradasPaginadas = computed(() => {
+    const inicio = (this.paginaAtual() - 1) * this.itensPorPagina
+    const fim = inicio + this.itensPorPagina
+    return this.alunosFiltrados().slice(inicio, fim)
+  })
+
+  proximaPagina() {
+    if(this.paginaAtual() < this.totalPaginas()) {
+      this.paginaAtual.update(p => p+1)
+    }
+  }
+
+  paginaAnterior() {
+    if(this.paginaAtual() > 1) {
+      this.paginaAtual.update(p => p-1)
+    }
   }
 
   carregarDadosAuxiliares() {
