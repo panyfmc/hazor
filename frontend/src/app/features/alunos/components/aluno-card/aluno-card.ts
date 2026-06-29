@@ -11,10 +11,6 @@ import {  CommonModule } from '@angular/common'
 })
 export class AlunoCard {
   @Input() aluno: any
-  @Input() frequenciaAtual = 0
-  @Input() frequenciaMeta = 0
-  @Input() atividadesAtual = 0
-  @Input() atividadesMeta = 0
   @Output() editarAluno = new EventEmitter<any>()
 
   isMenuOpen = false
