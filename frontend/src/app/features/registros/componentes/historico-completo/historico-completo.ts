@@ -51,7 +51,6 @@ export class HistoricoCompleto implements OnInit { // <-- Contrato assinado aqui
         })
     }
 
-    // Seus outros métodos continuam exatamente aqui embaixo...
     buscarDadosDaTemporada(id: number) {
         this.aulaService.listarAulas(id).subscribe(aulas => this.oficinas.set(aulas))
     }
