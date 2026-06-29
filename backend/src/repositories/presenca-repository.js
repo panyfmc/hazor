@@ -90,6 +90,18 @@ async function listarIdsPorOficina(oficinaId) {
     return result.recordset
 }
 
+async function contarPorAluno() {
+    const result = await new sql.Request().query(`
+        SELECT
+            AlunoId,
+            COUNT(*) AS Total
+        FROM Presencas
+        GROUP BY AlunoId
+    `)
+
+    return result.recordset
+}
+
 module.exports = {
     listar,
     criar,
@@ -97,5 +109,6 @@ module.exports = {
     listarPorOficina,
     excluir,
     excluirPorOficina,
-    listarIdsPorOficina
+    listarIdsPorOficina,
+    contarPorAluno
 }

@@ -3,10 +3,38 @@ const atualizarRepository = require('../repositories/atualizar-aluno-repository'
 const inativarRepository = require('../repositories/inativar-aluno-repository')
 const reativarRepository = require('../repositories/reativar-aluno-repository')
 const alunoGrupoRepository = require('../repositories/aluno-grupo-repository')
+const presencaRepository = require('../repositories/presenca-repository')
+const entregaRepository = require('../repositories/entrega-repository')
+const aulaRepository = require('../repositories/aula-repository')
+const atividadeRepository = require('../repositories/atividade-repository')
 const gp_oficina = 1
 
 async function listar() {
-    return await alunoRepository.listar()
+    const alunos = await alunoRepository.listar()
+
+    const totalAulas = await aulaRepository.contar()
+    const totalAtividades = await atividadeRepository.contar()
+
+    const presencas = await presencaRepository.contarPorAluno()
+    const entregas = await entregaRepository.contarPorAluno()
+
+    const mapaPresencas = new Map(
+        presencas.map(p => [p.AlunoId, p.Total])
+    )
+
+    const mapaEntregas = new Map(
+        entregas.map(e => [e.AlunoId, e.Total])
+    )
+
+    return alunos.map(aluno => ({
+        ...aluno,
+
+        presencas: mapaPresencas.get(aluno.Id) ?? 0,
+        totalAulas,
+
+        entregas: mapaEntregas.get(aluno.Id) ?? 0,
+        totalAtividades
+    }))
 }
 
 async function criar(aluno) {

@@ -66,9 +66,22 @@ async function excluirPorAtividade(atividadeId, transaction = null) {
 
 }
 
+async function contarPorAluno() {
+    const result = await new sql.Request().query(`
+        SELECT
+            AlunoId,
+            COUNT(*) AS Total
+        FROM Entregas
+        GROUP BY AlunoId
+    `)
+
+    return result.recordset
+}
+
 module.exports = {
     criarEntrega,
     removerEntrega,
     listarPorAtividade,
-    excluirPorAtividade
+    excluirPorAtividade,
+    contarPorAluno
 }

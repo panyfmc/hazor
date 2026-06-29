@@ -93,10 +93,20 @@ async function excluir(id) {
         `)
 }
 
+async function contar() {
+    const result = await new sql.Request().query(`
+        SELECT COUNT(*) AS Total
+        FROM Oficinas
+    `)
+
+    return result.recordset[0].Total
+}
+
 module.exports = {
     listar,
     criar,
     buscarPorId,
     atualizar,
-    excluir
+    excluir,
+    contar
 }
