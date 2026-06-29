@@ -27,10 +27,10 @@ async function excluir(req, res) {
 }
 
 async function criarEntrega(req, res) {
-    await atividadeService.criarEntrega(
-        req.body.atividadeId,
-        req.body.alunoId
-    )
+    const atividadeId = Number(req.params.atividadeId)
+    const { alunoId } = req.body
+
+    await atividadeService.criarEntrega(atividadeId, alunoId)
     res.sendStatus(201)
 }
 

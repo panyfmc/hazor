@@ -53,9 +53,19 @@ async function encerrar(id) {
         `)
 }
 
+async function contar() {
+    const result = await new sql.Request().query(`
+        SELECT COUNT(*) AS Total
+        FROM Atividades
+    `)
+
+    return result.recordset[0].Total
+}
+
 module.exports = {
     criar,
     buscarPorOficina,
     excluir,
-    encerrar
+    encerrar,
+    contar
 }
