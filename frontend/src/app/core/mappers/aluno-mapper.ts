@@ -16,10 +16,10 @@ export class AlunoMapper {
       regiaoId: aluno.RegiaoId,
       igrejaId: aluno.IgrejaId,
       grupoId: aluno.GrupoId,
-      frequenciaAtual: 0,
-      frequenciaMeta: 6,
-      atividadesAtual: 0,
-      atividadesMeta: 6
+      frequenciaAtual: aluno.presencas,
+      frequenciaMeta: aluno.totalAulas,
+      atividadesAtual: aluno.entregas,
+      atividadesMeta: aluno.totalAtividades
     }
 
   }

@@ -1,3 +1,5 @@
+<!-- <pre>{{ aluno | json }}</pre> -->
+
 <div
   class="group overflow-hidden rounded-3xl
          border border-white/70
@@ -107,7 +109,7 @@
         <span
           class="text-sm font-semibold text-slate-700">
 
-          {{ frequenciaAtual }}/{{ frequenciaMeta }}
+          {{ aluno.frequenciaAtual }}/{{ aluno.frequenciaMeta }}
 
         </span>
 
@@ -116,7 +118,8 @@
       <div
         class="h-2 overflow-hidden rounded-full bg-slate-100">
         <div
-          class="h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-400" style="width: 85%">
+          class="h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-400" 
+          [style.width.%]="aluno.frequenciaMeta ? (aluno.frequenciaAtual / aluno.frequenciaMeta) * 100 : 0">
         </div>
       </div>
 
@@ -137,7 +140,7 @@
         <span
           class="text-sm font-semibold text-slate-700">
 
-          {{ atividadesAtual }}/{{ atividadesMeta }}
+          {{ aluno.atividadesAtual }}/{{ aluno.atividadesMeta }}
 
         </span>
 
@@ -148,7 +151,7 @@
 
         <div
           class="h-full rounded-full bg-gradient-to-r from-cyan-400 to-blue-500"
-          style="width: 70%">
+          [style.width.%]="aluno.atividadesMeta ? (aluno.atividadesAtual / aluno.atividadesMeta) * 100 : 0">
         </div>
 
       </div>
