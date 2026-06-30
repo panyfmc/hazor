@@ -53,11 +53,18 @@
           }
 
           <button
-            
+            (click)="abrirModal()"
             class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-blue-600 hover:bg-blue-50">
             <i class="pi pi-plus"></i>
             {{ listaTemporadas().length ? 'Nova temporada' : 'Criar primeira temporada' }}
           </button>
+          
+          @if(mostrarModalCadastro) {
+            <app-nova-temporada
+            (fechar)="fecharModal()"
+            (salvar)="salvarNovaTemporada($event)">
+            </app-nova-temporada>
+          }
 
         </div>
 

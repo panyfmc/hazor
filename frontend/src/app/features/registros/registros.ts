@@ -1,21 +1,23 @@
-import { Component, inject, OnInit, signal, effect, computed, HostListener } from '@angular/core' // signal pra resolver o problema de Detecção de Mudanças (Change Detection)
+import { Component, inject, OnInit, signal, effect, computed, HostListener, ElementRef } from '@angular/core' // signal pra resolver o problema de Detecção de Mudanças (Change Detection)
 import { temporadaService } from '../../core/services/temporada-services'
 import { aulaService } from '../../core/services/aulas-services'
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { AlunoService } from '../../core/services/aluno-service'
 import { AlunoMapper } from '../../core/mappers/aluno-mapper'
+import { NovaTemporada } from './componentes/nova-temporada/nova-temporada'
 
 @Component({
   selector: 'app-registros',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NovaTemporada],
   templateUrl: './registros.html'
 })
 export class Registros implements OnInit {
   private temporadaService = inject(temporadaService)
   private aulaService = inject(aulaService)
   private alunoService = inject(AlunoService)
+  private elementRef = inject(ElementRef)
   // Inicializa a temporada como um Signal
   listaTemporadas = signal<any[]>([])
   temporada = signal<any>(null)
@@ -23,6 +25,10 @@ export class Registros implements OnInit {
   alunos = signal<any[]>([])
   menuAbertoId = signal<number | null>(null)
   dropdownTemporadaAberto = false
+  mostrarModalCadastro = false
+
+  abrirModal() { this.mostrarModalCadastro = true }
+  fecharModal() { this.mostrarModalCadastro = false }
 
   limiteExibicao = computed(() => {
     return this.oficinas().slice(0, 5)
@@ -101,6 +107,16 @@ export class Registros implements OnInit {
         this.alunos.set(mapeado) 
       },
       error: (erro) => console.error(erro)
+    })
+  }
+
+  salvarNovaTemporada(novo: any) {
+    this.temporadaService.criarTemporada(novo).subscribe({
+      next: () => {
+        this.carregarDadosIniciais(),
+        this.fecharModal()
+      },
+      error: erro => console.error('Erro ao salvar temporada:', erro)
     })
   }
 
