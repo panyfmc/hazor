@@ -14,7 +14,7 @@ async function criar(temporada) {
     await new sql.Request()
         .input('nome', sql.VarChar, temporada.nome)
         .input('inicio', sql.Date, temporada.dataInicio)
-        .input('fim', sql.Date, temporada.dataFim)
+        .input('fim', sql.Date, temporada.dataFim || null)
         .query(`
             UPDATE Temporadas
             SET Ativa = 0
