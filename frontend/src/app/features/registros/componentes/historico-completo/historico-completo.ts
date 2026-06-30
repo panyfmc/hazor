@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, computed, HostListener } from '@angular/core'
+import { Component, inject, OnInit, effect, signal, computed, HostListener } from '@angular/core'
 import { temporadaService } from '../../../../core/services/temporada-services'
 import { aulaService } from '../../../../core/services/aulas-services'
 import { CommonModule } from '@angular/common'
@@ -18,6 +18,7 @@ export class HistoricoCompleto implements OnInit { // <-- Contrato assinado aqui
     private alunoService = inject(AlunoService)
     listaTemporadas = signal<any[]>([])
     temporada = signal<any>(null)
+    dropdownTemporadaAberto = false
     oficinas = signal<any[]>([])
     alunos = signal<any[]>([])
     paginaAtual = signal<number>(1)
@@ -32,13 +33,8 @@ export class HistoricoCompleto implements OnInit { // <-- Contrato assinado aqui
     })
 
     ngOnInit() {
-        this.temporadaService.buscarAtiva().subscribe(res => {
-            this.temporada.set(res)
-            if (res?.Id) {
-                this.buscarDadosDaTemporada(res.Id)
-            }
-        })
         this.carregarAlunos()
+        this.carregarDadosTemporada()
     }
 
     carregarAlunos() {
@@ -49,18 +45,6 @@ export class HistoricoCompleto implements OnInit { // <-- Contrato assinado aqui
             },
             error: (erro) => console.error(erro)
         })
-    }
-
-    buscarDadosDaTemporada(id: number) {
-        this.aulaService.listarAulas(id).subscribe(aulas => this.oficinas.set(aulas))
-    }
-    mudarTemporada(event: Event) {
-        const selectElement = event.target as HTMLSelectElement
-        const temporadaId = Number(selectElement.value)
-
-        if (temporadaId) {
-            this.buscarDadosDaTemporada(temporadaId)
-        }
     }
 
     oficinasFiltradas = computed(() => {
@@ -87,6 +71,45 @@ export class HistoricoCompleto implements OnInit { // <-- Contrato assinado aqui
 
     constructor() {
         this.departamentoSelecionado.set('') 
+        effect(() => {
+            const tempId = this.temporada()?.Id
+            if(tempId) {
+                this.carregarAulas(tempId)
+            }
+
+        })
+    }
+
+    private carregarAulas(temporadaId: number) {
+        this.aulaService.listarAulas(temporadaId).subscribe(res => {
+        this.oficinas.set(res) // Alimenta o signal das oficinas
+        })
+    }
+
+    toggleDropdownTemporada() {
+        this.dropdownTemporadaAberto = !this.dropdownTemporadaAberto
+    }
+
+    selecionarTemporada(temp: any) {
+        this.temporada.set(temp)
+        this.dropdownTemporadaAberto = false
+    }
+
+    carregarDadosTemporada() {
+        this.temporadaService.listarTemporadas().subscribe({
+        next: (dadosDoBanco) => {
+            this.listaTemporadas.set(dadosDoBanco)
+            const ativa = dadosDoBanco.find(temp => temp.Ativa === 1)
+            if (ativa) {
+            this.temporada.set(ativa)
+            } else if (dadosDoBanco.length > 0) {
+            this.temporada.set(dadosDoBanco[0])
+            }
+        },
+        error: (err) => {
+            console.error('Erro ao buscar temporadas do banco:', err)
+        }
+        })
     }
 
     proximaPagina() {
@@ -108,6 +131,7 @@ export class HistoricoCompleto implements OnInit { // <-- Contrato assinado aqui
     }
 
     @HostListener('document:click')
+
     fecharMenus() {
         this.menuAbertoId.set(null)
     }

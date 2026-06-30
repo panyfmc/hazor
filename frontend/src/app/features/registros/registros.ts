@@ -17,11 +17,12 @@ export class Registros implements OnInit {
   private aulaService = inject(aulaService)
   private alunoService = inject(AlunoService)
   // Inicializa a temporada como um Signal
+  listaTemporadas = signal<any[]>([])
   temporada = signal<any>(null)
   oficinas = signal<any[]>([])
   alunos = signal<any[]>([])
   menuAbertoId = signal<number | null>(null)
-
+  dropdownTemporadaAberto = false
 
   limiteExibicao = computed(() => {
     return this.oficinas().slice(0, 5)
@@ -57,8 +58,34 @@ export class Registros implements OnInit {
       this.temporada.set(res)
     })
     this.carregarAlunos()   // carrega a quantidade de alunos assim que a tela abre
+    this.carregarDadosIniciais()
 
+  }
 
+  carregarDadosIniciais() {
+    this.temporadaService.listarTemporadas().subscribe({
+      next: (dadosDoBanco) => {
+        this.listaTemporadas.set(dadosDoBanco)
+        const ativa = dadosDoBanco.find(temp => temp.Ativa === 1)
+        if (ativa) {
+          this.temporada.set(ativa)
+        } else if (dadosDoBanco.length > 0) {
+          this.temporada.set(dadosDoBanco[0])
+        }
+      },
+      error: (err) => {
+        console.error('Erro ao buscar temporadas do banco:', err)
+      }
+    })
+  }
+
+  toggleDropdownTemporada() {
+    this.dropdownTemporadaAberto = !this.dropdownTemporadaAberto
+  }
+
+  selecionarTemporada(temp: any) {
+    this.temporada.set(temp)
+    this.dropdownTemporadaAberto = false
   }
 
   private carregarAulas(temporadaId: number) {
@@ -76,6 +103,7 @@ export class Registros implements OnInit {
       error: (erro) => console.error(erro)
     })
   }
+
 
   @HostListener('document:click')
     fecharMenus() {
