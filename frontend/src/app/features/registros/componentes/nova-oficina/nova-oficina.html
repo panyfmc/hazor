@@ -1,0 +1,219 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm" (click)="fecharModal()"></div>
+
+  <div class="relative w-full max-w-lg rounded-3xl border border-slate-100 bg-white p-6 shadow-2xl transition-all max-h-[90vh] overflow-y-auto">
+
+    <div class="mb-5 flex items-center justify-between">
+      <h3 class="text-xl font-bold text-slate-900">Cadastrar Nova Oficina</h3>
+      <button (click)="fecharModal()" class="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 cursor-pointer">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+
+    @if (sucesso) {
+      <div class="mb-4 flex items-center gap-2 rounded-xl bg-emerald-50 p-4 text-sm font-medium text-emerald-700 border border-emerald-100 animate-fadeIn">
+        <i class="pi pi-check-circle text-base"></i>
+        <span>Oficina salva com sucesso! Fechando...</span>
+      </div>
+    }
+
+    <!-- FORMS  -->
+
+    <form
+      (ngSubmit)="onSubmit()"
+      #aulaForm="ngForm"
+      class="space-y-4">
+
+      <!-- DATA -->
+
+      <div>
+
+        <label
+          class="mb-1 block text-sm font-medium text-slate-700">
+          Data da Oficina
+        </label>
+
+        <input
+          type="date" name="dataAula" [(ngModel)]="formulario.dataAula" required
+          class="w-full rounded-xl cursor-pointer border border-slate-200 px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
+
+      </div>
+
+      <!-- DEPARTAMENTO -->
+
+      <div>
+
+        <label
+          class="mb-1 block text-sm font-medium text-slate-700">
+          Departamento
+        </label>
+
+        <div class="relative w-full">
+          <button
+            type="button"
+            (click)="toggleDropdownDepartamento()"
+            class="flex w-full items-center cursor-pointer justify-between rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
+
+            <span>
+              {{ getDepartamentoSelecionadoNome() }}
+            </span>
+
+            <svg class="h-4 w-4 text-gray-500 transition-transform" [class.rotate-180]="dropdownDepartamentoAberto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+            </svg>
+          </button>
+
+          @if (dropdownDepartamentoAberto) {
+            <div class="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white p-1 shadow-lg animate-fadeIn">
+
+              <button
+                type="button"
+                (click)="selecionarDepartamento(null)"
+                class="w-full text-left rounded-lg px-3 py-2 text-sm text-gray-500 hover:bg-slate-100">
+                Selecione
+              </button>
+
+              @for(dept of departamentos; track dept.id){
+                <button
+                  type="button"
+                  (click)="selecionarDepartamento(dept.id)"
+                  class="w-full text-left rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                  [class.bg-blue-50]="formulario.departamentoId === dept.id"
+                  [class.font-medium]="formulario.departamentoId === dept.id">
+                  {{ dept.nome }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+
+      </div>
+
+      <!-- PRESENCAS -->
+
+      <div>
+
+        <label
+          class="mb-1 block text-sm font-medium text-slate-700">
+          Presenças
+        </label>
+
+        <div class="relative w-full">
+          <button
+            type="button"
+            (click)="toggleDropDownSeletor()"
+            class="flex w-full cursor-pointer items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
+
+            <span class="text-slate-700">
+              @if(selecionados.length === 0) {
+                Selecionar alunos
+              } @else {
+                {{ selecionados.length }} aluno(s) selecionado(s)
+              }
+            </span>
+
+            <svg class="h-4 w-4 text-gray-500 transition-transform" [class.rotate-180]="dropdownSeletorAberto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+            </svg>
+          </button>
+
+          @if (dropdownSeletorAberto) {
+            <div class="absolute left-0 right-0 z-50 mt-1 flex flex-col rounded-xl border border-slate-200 bg-white shadow-xl animate-fadeIn overflow-hidden h-64 max-h-64">
+
+              <div class="border-b border-slate-100 p-2 shrink-0 bg-white">
+                <input
+                  type="text"
+                  [ngModel]="pesquisa()"
+                  (ngModelChange)="pesquisa.set($event)"
+                  name="pesquisaAluno"
+                  placeholder="Pesquisar aluno..."
+                  class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
+              </div>
+
+              <div class="flex gap-2 border-b border-slate-100 p-2 shrink-0 bg-white">
+                <button
+                  type="button"
+                  (click)="selecionarTodos()"
+                  class="rounded-lg border border-blue-500 px-2.5 py-1 text-xs text-blue-600 hover:bg-blue-500 hover:text-white transition cursor-pointer">
+                  Todos
+                </button>
+                <button
+                  type="button"
+                  (click)="removerTodos()"
+                  class="rounded-lg border border-slate-300 px-2.5 py-1 text-xs text-slate-600 hover:bg-slate-100 transition cursor-pointer">
+                  Limpar
+                </button>
+              </div>
+
+              <div class="overflow-y-auto p-1 flex-1 min-h-0 bg-white">
+                @for(aluno of alunosFiltrados(); track aluno.id){
+                  <button
+                    type="button"
+                    (click)="toggleAluno(aluno.id)"
+                    class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-left text-slate-700 hover:bg-blue-50 transition cursor-pointer">
+
+                    <span class="truncate pr-2">{{ aluno.nomeCompleto }}</span>
+
+                    <div
+                      class="flex h-5 w-5 shrink-0 items-center justify-center rounded border transition"
+                      [class.border-blue-500]="alunoSelecionado(aluno.id)"
+                      [class.bg-blue-500]="alunoSelecionado(aluno.id)"
+                      [class.border-slate-300]="!alunoSelecionado(aluno.id)">
+                      @if(alunoSelecionado(aluno.id)){
+                        <i class="pi pi-check text-[10px] text-white"></i>
+                      }
+                    </div>
+                  </button>
+                } @empty {
+                  <div class="p-4 text-center text-sm text-slate-400">Nenhum aluno encontrado</div>
+                }
+              </div>
+
+            </div>
+          }
+        </div>
+
+      </div>
+
+      <!-- ATIVIDADE -->
+
+      <div class="flex items-center justify-between pt-2">
+        <div>
+          <label class="text-sm font-medium text-slate-700">Houve atividade?</label>
+          <p class="text-xs text-slate-400">Uma atividade será vinculada automaticamente</p>
+        </div>
+        <label class="relative inline-flex cursor-pointer items-center">
+          <input
+            type="checkbox"
+            name="teveAtividade"
+            [(ngModel)]="formulario.teveAtividade"
+            class="peer sr-only">
+          <div class="peer h-6 w-11 rounded-full bg-slate-200 after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-500 peer-checked:after:translate-x-full"></div>
+        </label>
+      </div>
+
+      <!-- BOTOES -->
+
+      <div
+        class="mt-6 flex justify-end gap-3 border-t border-slate-100 pt-4">
+
+        <button
+          type="button"
+          (click)="fecharModal()"
+          class="cursor-pointer rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50">
+          Cancelar
+        </button>
+
+        <button
+          type="submit"
+          [disabled]="!aulaForm.form.valid || salvando || sucesso"
+          class="cursor-pointer rounded-xl bg-blue-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50">
+          {{ salvando ? 'Salvando...' : 'Salvar Oficina' }}
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+</div>

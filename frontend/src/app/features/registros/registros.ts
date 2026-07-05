@@ -6,11 +6,12 @@ import { RouterModule } from '@angular/router'
 import { AlunoService } from '../../core/services/aluno-service'
 import { AlunoMapper } from '../../core/mappers/aluno-mapper'
 import { NovaTemporada } from './componentes/nova-temporada/nova-temporada'
+import { CriarOficina, NovaOficina } from './componentes/nova-oficina/nova-oficina'
 
 @Component({
   selector: 'app-registros',
   standalone: true,
-  imports: [CommonModule, RouterModule, NovaTemporada],
+  imports: [CommonModule, RouterModule, NovaTemporada, NovaOficina],
   templateUrl: './registros.html'
 })
 export class Registros implements OnInit {
@@ -25,10 +26,14 @@ export class Registros implements OnInit {
   alunos = signal<any[]>([])
   menuAbertoId = signal<number | null>(null)
   dropdownTemporadaAberto = false
-  mostrarModalCadastro = false
+  mostrarModalTemporada = false
+  mostrarModalOficina = false
 
-  abrirModal() { this.mostrarModalCadastro = true }
-  fecharModal() { this.mostrarModalCadastro = false }
+  abrirModalTemporada() { this.mostrarModalTemporada = true }
+  fecharModalTemporada() { this.mostrarModalTemporada = false }
+
+  abrirModalOficina() { this.mostrarModalOficina = true }
+  fecharModalOficina() { this.mostrarModalOficina = false }
 
   limiteExibicao = computed(() => {
     return this.oficinas().slice(0, 5)
@@ -114,9 +119,21 @@ export class Registros implements OnInit {
     this.temporadaService.criarTemporada(novo).subscribe({
       next: () => {
         this.carregarDadosIniciais(),
-        this.fecharModal()
+        this.fecharModalTemporada()
       },
       error: erro => console.error('Erro ao salvar temporada:', erro)
+    })
+  }
+
+  salvarNovaOficina(oficina: CriarOficina) {
+    this.aulaService.criarAula(oficina).subscribe({
+      next: () => {
+        this.carregarDadosIniciais()
+        this.fecharModalOficina()
+      },
+      error: err => {
+        console.error(err)
+      }
     })
   }
 
