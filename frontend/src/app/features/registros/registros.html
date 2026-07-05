@@ -53,15 +53,15 @@
           }
 
           <button
-            (click)="abrirModal()"
+            (click)="abrirModalTemporada()"
             class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-blue-600 hover:bg-blue-50">
             <i class="pi pi-plus"></i>
             {{ listaTemporadas().length ? 'Nova temporada' : 'Criar primeira temporada' }}
           </button>
           
-          @if(mostrarModalCadastro) {
+          @if(mostrarModalTemporada) {
             <app-nova-temporada
-            (fechar)="fecharModal()"
+            (fechar)="fecharModalTemporada()"
             (salvar)="salvarNovaTemporada($event)">
             </app-nova-temporada>
           }
@@ -85,10 +85,21 @@
             <h2 class="text-base font-semibold text-slate-900">Histórico de Oficinas</h2>
             <p class="text-xs text-slate-400">Últimos registros realizados no período atual.</p>
           </div>
-
-          <button class="w-full sm:w-auto cursor-pointer rounded-2xl bg-slate-900 px-4 py-3 text-xs font-medium text-white transition hover:bg-slate-800 hover:scale-[1.02]">
+          
+          <button
+            (click)="abrirModalOficina()"          
+            class="w-full sm:w-auto cursor-pointer rounded-2xl bg-slate-900 px-4 py-3 text-xs font-medium text-white transition hover:bg-slate-800 hover:scale-[1.02]">
             + Nova oficina
           </button>
+
+          @if (mostrarModalOficina) {
+            <app-nova-oficina
+                [alunos]="alunos()"
+                (fechar)="fecharModalOficina()"
+                (salvar)="salvarNovaOficina($event)">
+            </app-nova-oficina>
+          }
+
         </div>
 
         <div class="overflow-x-auto">
@@ -344,3 +355,4 @@
 
   </div>
 </div>
+
