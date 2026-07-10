@@ -20,4 +20,8 @@ export class temporadaService {
         return this.http.get<any>(`${this.apiUrl}/ativa`)
     }
 
+    excluir(id: number) {
+        return this.http.delete(`${this.apiUrl}/${id}`)
+    }
+
 }

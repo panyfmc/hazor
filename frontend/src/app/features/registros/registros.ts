@@ -25,6 +25,7 @@ export class Registros implements OnInit {
   oficinas = signal<any[]>([])
   alunos = signal<any[]>([])
   menuAbertoId = signal<number | null>(null)
+  temporadaParaExcluir = signal<any | null>(null)
   dropdownTemporadaAberto = false
   mostrarModalTemporada = false
   mostrarModalOficina = false
@@ -135,6 +136,27 @@ export class Registros implements OnInit {
         console.error(err)
       }
     })
+  }
+
+  excluirTemporada(id: number) {
+    this.temporadaService.excluir(id).subscribe({
+      next: () => {
+        this.carregarDadosIniciais()
+      }
+    })
+  }
+
+  executarExclusaoTemporada() {
+    const temp = this.temporadaParaExcluir();
+    if (temp) {
+      this.temporadaService.excluir(temp.Id).subscribe({
+        next: () => {
+          this.temporadaParaExcluir.set(null); // Fecha o modal de confirmação
+          this.carregarDadosIniciais();        // Atualiza a listagem
+        },
+        error: (err) => console.error("Erro ao excluir temporada:", err)
+      });
+    }
   }
 
 
