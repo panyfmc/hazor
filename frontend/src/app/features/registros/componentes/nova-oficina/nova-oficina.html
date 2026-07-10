@@ -1,7 +1,7 @@
 <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
   <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm" (click)="fecharModal()"></div>
 
-  <div class="relative w-full max-w-lg rounded-3xl border border-slate-100 bg-white p-6 shadow-2xl transition-all max-h-[90vh] overflow-y-auto">
+  <div class="relative w-full max-w-lg rounded-3xl border border-slate-100 bg-white p-6 shadow-2xl transition-all max-h-[90vh] overflow-visible">
 
     <div class="mb-5 flex items-center justify-between">
       <h3 class="text-xl font-bold text-slate-900">Cadastrar Nova Oficina</h3>
@@ -90,11 +90,8 @@
       </div>
 
       <!-- PRESENCAS -->
-
       <div>
-
-        <label
-          class="mb-1 block text-sm font-medium text-slate-700">
+        <label class="mb-1 block text-sm font-medium text-slate-700">
           Presenças
         </label>
 
@@ -116,9 +113,8 @@
               <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
             </svg>
           </button>
-
           @if (dropdownSeletorAberto) {
-            <div class="absolute left-0 right-0 z-50 mt-1 flex flex-col rounded-xl border border-slate-200 bg-white shadow-xl animate-fadeIn overflow-hidden h-64 max-h-64">
+            <div class="absolute left-0 right-0 z-50 mt-1 flex flex-col rounded-xl border border-slate-200 bg-white shadow-xl animate-fadeIn overflow-hidden h-72 max-h-72">
 
               <div class="border-b border-slate-100 p-2 shrink-0 bg-white">
                 <input
@@ -145,13 +141,14 @@
                 </button>
               </div>
 
-              <div class="overflow-y-auto p-1 flex-1 min-h-0 bg-white">
+              <!-- 3. Área Isolada de Scroll: Apenas os Alunos rolam aqui dentro -->
+              <div class="overflow-y-auto p-1 flex-1 min-h-0 bg-white overscroll-contain">
                 @for(aluno of alunosFiltrados(); track aluno.id){
                   <button
                     type="button"
                     (click)="toggleAluno(aluno.id)"
-                    class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-left text-slate-700 hover:bg-blue-50 transition cursor-pointer">
-
+                    class="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm text-left text-slate-700 hover:bg-blue-50 transition cursor-pointer">
+                    
                     <span class="truncate pr-2">{{ aluno.nomeCompleto }}</span>
 
                     <div
@@ -172,7 +169,6 @@
             </div>
           }
         </div>
-
       </div>
 
       <!-- ATIVIDADE -->
