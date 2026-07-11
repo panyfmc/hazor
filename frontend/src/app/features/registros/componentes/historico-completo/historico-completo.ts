@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, effect, signal, computed, HostListener } from '@angular/core'
 import { temporadaService } from '../../../../core/services/temporada-services'
-import { aulaService } from '../../../../core/services/aulas-services'
+import { AulaService } from '../../../../core/services/aulas-services'
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { AlunoService } from '../../../../core/services/aluno-service'
@@ -14,7 +14,7 @@ import { AlunoMapper } from '../../../../core/mappers/aluno-mapper'
 })
 export class HistoricoCompleto implements OnInit { // <-- Contrato assinado aqui
     private temporadaService = inject(temporadaService)
-    private aulaService = inject(aulaService)
+    private aulaService = inject(AulaService)
     private alunoService = inject(AlunoService)
     listaTemporadas = signal<any[]>([])
     temporada = signal<any>(null)

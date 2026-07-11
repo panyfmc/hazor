@@ -5,7 +5,7 @@ import { HttpClient, HttpParams } from '@angular/common/http'
     providedIn: 'root'
 })
 
-export class aulaService {
+export class AulaService {
     private http = inject(HttpClient)
     private apiUrl =  'http://localhost:3000/aulas'
 

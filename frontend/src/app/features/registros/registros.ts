@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal, effect, computed, HostListener, ElementRef } from '@angular/core' // signal pra resolver o problema de Detecção de Mudanças (Change Detection)
 import { temporadaService } from '../../core/services/temporada-services'
-import { aulaService } from '../../core/services/aulas-services'
+import { AulaService } from '../../core/services/aulas-services'
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { AlunoService } from '../../core/services/aluno-service'
@@ -16,7 +16,7 @@ import { CriarOficina, NovaOficina } from './componentes/nova-oficina/nova-ofici
 })
 export class Registros implements OnInit {
   private temporadaService = inject(temporadaService)
-  private aulaService = inject(aulaService)
+  private aulaService = inject(AulaService)
   private alunoService = inject(AlunoService)
   private elementRef = inject(ElementRef)
   // Inicializa a temporada como um Signal
