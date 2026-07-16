@@ -7,11 +7,12 @@ import { AlunoService } from '../../core/services/aluno-service'
 import { AlunoMapper } from '../../core/mappers/aluno-mapper'
 import { NovaTemporada } from './componentes/nova-temporada/nova-temporada'
 import { CriarOficina, NovaOficina } from './componentes/nova-oficina/nova-oficina'
+import { EditarOficina } from './componentes/editar-oficina/editar-oficina'
 
-@Component({
+@Component({ 
   selector: 'app-registros',
   standalone: true,
-  imports: [CommonModule, RouterModule, NovaTemporada, NovaOficina],
+  imports: [CommonModule, RouterModule, NovaTemporada, NovaOficina, EditarOficina],
   templateUrl: './registros.html'
 })
 export class Registros implements OnInit {
@@ -29,12 +30,25 @@ export class Registros implements OnInit {
   dropdownTemporadaAberto = false
   mostrarModalTemporada = false
   mostrarModalOficina = false
+  mostrarModalEditarOficina = false
+  oficinaParaEditar = signal<any | null>(null)
 
   abrirModalTemporada() { this.mostrarModalTemporada = true }
   fecharModalTemporada() { this.mostrarModalTemporada = false }
 
   abrirModalOficina() { this.mostrarModalOficina = true }
   fecharModalOficina() { this.mostrarModalOficina = false }
+
+  abrirModalEditarOficina(oficina: any) {
+    this.oficinaParaEditar.set(oficina)
+    console.log(oficina)
+    this.mostrarModalEditarOficina = true
+  }
+
+  fecharModalEditarOficina() {
+    this.mostrarModalEditarOficina = false
+    this.oficinaParaEditar.set(null)
+  }
 
   limiteExibicao = computed(() => {
     return this.oficinas().slice(0, 5)
@@ -69,7 +83,8 @@ export class Registros implements OnInit {
     this.temporadaService.buscarAtiva().subscribe(res => {
       this.temporada.set(res)
     })
-    this.carregarAlunos()   // carrega a quantidade de alunos assim que a tela abre
+    
+    this.carregarAlunos()   
     this.carregarDadosIniciais()
 
   }
@@ -78,6 +93,7 @@ export class Registros implements OnInit {
     this.temporadaService.listarTemporadas().subscribe({
       next: (dadosDoBanco) => {
         this.listaTemporadas.set(dadosDoBanco)
+
         const ativa = dadosDoBanco.find(temp => temp.Ativa === 1)
         if (ativa) {
           this.temporada.set(ativa)
@@ -85,10 +101,19 @@ export class Registros implements OnInit {
           this.temporada.set(dadosDoBanco[0])
         }
       },
-      error: (err) => {
-        console.error('Erro ao buscar temporadas do banco:', err)
-      }
+      error: (err) => console.error('Erro ao buscar temporadas:', err)
     })
+
+    // ← Adicione esta parte para recarregar as oficinas
+    const tempId = this.temporada()?.Id
+    if (tempId) {
+      this.aulaService.listarAulas(tempId).subscribe({
+        next: (oficinas) => {
+          this.oficinas.set(oficinas)
+        },
+        error: (err) => console.error('Erro ao recarregar oficinas:', err)
+      })
+    }
   }
 
   toggleDropdownTemporada() {
@@ -138,6 +163,17 @@ export class Registros implements OnInit {
     })
   }
 
+  salvarEditarOficina(dados: any) {
+    this.aulaService.atualizar(dados.id, dados).subscribe({
+      next: () => {
+        console.log("✅ SALVOU com sucesso!")
+        this.carregarDadosIniciais()
+        this.fecharModalEditarOficina()
+      },
+      error: (err) => console.error('Erro ao salvar:', err)
+    })
+  }
+
   excluirTemporada(id: number) {
     this.temporadaService.excluir(id).subscribe({
       next: () => {
@@ -147,15 +183,15 @@ export class Registros implements OnInit {
   }
 
   executarExclusaoTemporada() {
-    const temp = this.temporadaParaExcluir();
+    const temp = this.temporadaParaExcluir()
     if (temp) {
       this.temporadaService.excluir(temp.Id).subscribe({
         next: () => {
-          this.temporadaParaExcluir.set(null); // Fecha o modal de confirmação
-          this.carregarDadosIniciais();        // Atualiza a listagem
+          this.temporadaParaExcluir.set(null) // Fecha o modal de confirmação
+          this.carregarDadosIniciais()        // Atualiza a listagem
         },
         error: (err) => console.error("Erro ao excluir temporada:", err)
-      });
+      })
     }
   }
 
