@@ -104,7 +104,6 @@ export class Registros implements OnInit {
       error: (err) => console.error('Erro ao buscar temporadas:', err)
     })
 
-    // ← Adicione esta parte para recarregar as oficinas
     const tempId = this.temporada()?.Id
     if (tempId) {
       this.aulaService.listarAulas(tempId).subscribe({
