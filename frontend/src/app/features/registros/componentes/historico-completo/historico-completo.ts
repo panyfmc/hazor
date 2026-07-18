@@ -5,11 +5,12 @@ import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { AlunoService } from '../../../../core/services/aluno-service'
 import { AlunoMapper } from '../../../../core/mappers/aluno-mapper'
+import { EditarOficina } from '../editar-oficina/editar-oficina'
 
 @Component({
     selector: 'app-historico-completo',
     standalone: true,
-    imports: [CommonModule, RouterModule],
+    imports: [CommonModule, RouterModule, EditarOficina],
     templateUrl: './historico-completo.html'
 })
 export class HistoricoCompleto implements OnInit { // <-- Contrato assinado aqui
@@ -27,6 +28,57 @@ export class HistoricoCompleto implements OnInit { // <-- Contrato assinado aqui
     filtroData = signal<string>('')
     menuAbertoId = signal<number | null>(null)
     oficinaParaExcluirId = signal<number | null>(null)
+    oficinaParaEditar = signal<any | null>(null)
+    mostrarModalEditarOficina = false
+
+    abrirModalEditarOficina(oficina: any) {
+        this.oficinaParaEditar.set(oficina)
+        console.log("oiiii")
+        this.mostrarModalEditarOficina = true
+    }
+
+    fecharModalEditarOficina() {
+        this.mostrarModalEditarOficina = false
+        this.oficinaParaEditar.set(null)
+    }
+
+    carregarDadosIniciais() {
+        this.temporadaService.listarTemporadas().subscribe({
+        next: (dadosDoBanco) => {
+            this.listaTemporadas.set(dadosDoBanco)
+
+            const ativa = dadosDoBanco.find(temp => temp.Ativa === 1)
+            if (ativa) {
+            this.temporada.set(ativa)
+            } else if (dadosDoBanco.length > 0) {
+            this.temporada.set(dadosDoBanco[0])
+            }
+        },
+        error: (err) => console.error('Erro ao buscar temporadas:', err)
+        })
+
+        const tempId = this.temporada()?.Id
+        if (tempId) {
+        this.aulaService.listarAulas(tempId).subscribe({
+            next: (oficinas) => {
+            this.oficinas.set(oficinas)
+            },
+            error: (err) => console.error('Erro ao recarregar oficinas:', err)
+        })
+        }
+    }
+
+    salvarEditarOficina(dados: any) {
+    this.aulaService.atualizar(dados.id, dados).subscribe({
+      next: () => {
+        console.log("✅ SALVOU com sucesso!")
+        this.carregarDadosIniciais()
+        this.fecharModalEditarOficina()
+      },
+      error: (err) => console.error('Erro ao salvar:', err)
+    })
+  }
+
 
     totalAlunosAtivos = computed(() => {
         return this.alunos().length
@@ -35,6 +87,7 @@ export class HistoricoCompleto implements OnInit { // <-- Contrato assinado aqui
     ngOnInit() {
         this.carregarAlunos()
         this.carregarDadosTemporada()
+        this.carregarDadosIniciais()
     }
 
     carregarAlunos() {
@@ -152,9 +205,5 @@ export class HistoricoCompleto implements OnInit { // <-- Contrato assinado aqui
             console.log('Excluindo oficina de ID:', id)
             this.oficinaParaExcluirId.set(null)
         }
-    }
-
-    editar(oficina: any) {
-        console.log('Editar oficina:', oficina)
     }
 }

@@ -144,7 +144,9 @@
             
                             @if (menuAbertoId() === oficina.Id) {
                                 <div class="absolute right-0 mt-1 w-28 rounded-xl bg-white p-1 shadow-lg border border-slate-100 z-10 animate-in fade-in slide-in-from-top-1 duration-150">
-                                    <button (click)="editar(oficina)" class="w-full text-left px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer transition">
+                                    <button 
+                                    (click)="abrirModalEditarOficina(oficina)" 
+                                    class="w-full text-left px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer transition">
                                     Editar
                                     </button>
                                     <button (click)="confirmarExclusao(oficina.Id)" class="w-full text-left px-3 py-2 text-xs font-medium text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer transition">
@@ -207,6 +209,12 @@
             </div>
         </div>
     </div>
-    
-  
 </div>
+
+@if (mostrarModalEditarOficina) {
+  <app-editar-oficina 
+    [oficina]="oficinaParaEditar()"
+    (fechar)="fecharModalEditarOficina()"
+    (salvar)="salvarEditarOficina($event)">
+  </app-editar-oficina>
+}
