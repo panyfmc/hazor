@@ -2,10 +2,8 @@
   <!-- Backdrop -->
   <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm" (click)="fecharModal()"></div>
 
-  <!-- Modal Container -->
-  <!-- CORREÇÃO: Removido 'overflow-hidden' e adicionado 'overflow-visible'. 
-       Isso permite que o dropdown absoluto "flutue" para fora do modal sem criar barras de rolagem estranhas. -->
-  <div class="relative w-full max-w-lg rounded-3xl border border-slate-100 bg-white p-6 shadow-2xl transition-all duration-300 overflow-visible">
+  <!-- Modal Container: cresce com o painel de Presenças; scroll se a viewport for baixa -->
+  <div class="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl border border-slate-100 bg-white p-6 shadow-2xl transition-all duration-300">
     
     <!-- Header -->
     <div class="mb-6 flex items-center justify-between">
@@ -89,9 +87,8 @@
           </button>
 
           @if (dropdownSeletorAberto) {
-            <!-- CORREÇÃO: z-50, shadow-2xl e absolute garantem que ele sobreponha os botões lá embaixo de forma limpa.
-                 O h-52 limita a altura perfeitamente para exibir por volta de 3 nomes. -->
-            <div class="absolute left-0 right-0 z-50 mt-1 flex h-56 max-h-auto flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl animate-fadeIn">
+            <!-- In-flow: a modal cresce ao abrir; a lista interna mantém scroll -->
+            <div class="mt-1 flex h-56 w-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl animate-fadeIn">
 
               <!-- Pesquisa -->
               <div class="shrink-0 border-b border-slate-100 bg-white p-2">

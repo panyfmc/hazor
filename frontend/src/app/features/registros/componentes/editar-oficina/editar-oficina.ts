@@ -1,8 +1,6 @@
 import { Component, Input, Output, EventEmitter, inject, signal, computed, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
-import { ScrollingModule } from '@angular/cdk/scrolling'
-import { AulaService } from '../../../../core/services/aulas-services'
 import { AlunoService } from '../../../../core/services/aluno-service'
 
 export interface EditarOficinaForm {
@@ -15,7 +13,7 @@ export interface EditarOficinaForm {
 @Component({
   selector: 'app-editar-oficina',
   standalone: true,
-  imports: [CommonModule, FormsModule, ScrollingModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './editar-oficina.html'
 })
 export class EditarOficina implements OnInit {
