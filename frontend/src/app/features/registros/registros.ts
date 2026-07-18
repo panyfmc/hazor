@@ -37,7 +37,7 @@ export class Registros implements OnInit {
   fecharModalTemporada() { this.mostrarModalTemporada = false }
 
   abrirModalOficina() { this.mostrarModalOficina = true }
-  fecharModalOficina() { this.mostrarModalOficina = false }
+  fecharModalNovaOficina() { this.mostrarModalOficina = false }
 
   abrirModalEditarOficina(oficina: any) {
     this.oficinaParaEditar.set(oficina)
@@ -155,7 +155,7 @@ export class Registros implements OnInit {
     this.aulaService.criarAula(oficina).subscribe({
       next: () => {
         this.carregarDadosIniciais()
-        this.fecharModalOficina()
+        this.fecharModalNovaOficina()
       },
       error: err => {
         console.error(err)
