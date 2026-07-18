@@ -111,14 +111,6 @@
             + Nova oficina
           </button>
 
-          @if (mostrarModalOficina) {
-            <app-nova-oficina
-                [alunos]="alunos()"
-                (fechar)="fecharModalOficina()"
-                (salvar)="salvarNovaOficina($event)">
-            </app-nova-oficina>
-          }
-
         </div>
 
         <div class="overflow-visible">
@@ -405,10 +397,18 @@
   </div>
 }
 
+@if (mostrarModalOficina) {
+  <app-nova-oficina
+      [alunos]="alunos()"
+      (fechar)="fecharModalNovaOficina()"
+      (salvar)="salvarNovaOficina($event)">
+  </app-nova-oficina>
+}
+
 @if (mostrarModalEditarOficina) {
   <app-editar-oficina 
     [oficina]="oficinaParaEditar()"
-    (fechar)="fecharModalOficina()"
+    (fechar)="fecharModalEditarOficina()"
     (salvar)="salvarEditarOficina($event)">
   </app-editar-oficina>
 }
