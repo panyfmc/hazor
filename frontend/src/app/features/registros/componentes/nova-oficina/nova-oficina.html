@@ -1,7 +1,7 @@
 <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
   <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm" (click)="fecharModal()"></div>
 
-  <div class="relative w-full max-w-lg rounded-3xl border border-slate-100 bg-white p-6 shadow-2xl transition-all max-h-[90vh] overflow-visible">
+  <div class="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl border border-slate-100 bg-white p-6 shadow-2xl transition-all">
 
     <div class="mb-5 flex items-center justify-between">
       <h3 class="text-xl font-bold text-slate-900">Cadastrar Nova Oficina</h3>
@@ -114,7 +114,7 @@
             </svg>
           </button>
           @if (dropdownSeletorAberto) {
-            <div class="absolute left-0 right-0 z-50 mt-1 flex flex-col rounded-xl border border-slate-200 bg-white shadow-xl animate-fadeIn overflow-hidden h-72 max-h-72">
+            <div class="mt-1 flex h-72 w-full max-h-72 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl animate-fadeIn">
 
               <div class="border-b border-slate-100 p-2 shrink-0 bg-white">
                 <input
