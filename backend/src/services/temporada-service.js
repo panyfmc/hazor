@@ -12,6 +12,10 @@ async function buscarAtiva() {
     return await repository.buscarAtiva()
 }
 
+async function ativar(id) {           
+    return await repository.ativar(id)
+}
+
 async function excluir(id) {
     return await repository.excluir(id)
 }
@@ -20,5 +24,6 @@ module.exports = {
     listar,
     criar,
     buscarAtiva,
+    ativar,
     excluir
 }

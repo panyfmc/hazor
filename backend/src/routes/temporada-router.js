@@ -4,6 +4,7 @@ const controller = require('../controllers/temporada-controller')
 router.get('/', controller.listar)
 router.get('/ativa', controller.buscarAtiva)
 router.post('/', controller.criar)
+router.patch('/:id/ativar', controller.ativar)
 router.delete('/:id', controller.excluir)
 
 module.exports = router
