@@ -80,7 +80,7 @@ export class Registros implements OnInit {
   })
 
   ngOnInit() {
-    this.temporadaService.buscarAtiva().subscribe(res => {
+    this.temporadaService.buscarTemporadaAtiva().subscribe(res => {
       this.temporada.set(res)
     })
     
@@ -174,7 +174,7 @@ export class Registros implements OnInit {
   }
 
   excluirTemporada(id: number) {
-    this.temporadaService.excluir(id).subscribe({
+    this.temporadaService.excluirTemporada(id).subscribe({
       next: () => {
         this.carregarDadosIniciais()
       }
@@ -184,7 +184,7 @@ export class Registros implements OnInit {
   executarExclusaoTemporada() {
     const temp = this.temporadaParaExcluir()
     if (temp) {
-      this.temporadaService.excluir(temp.Id).subscribe({
+      this.temporadaService.excluirTemporada(temp.Id).subscribe({
         next: () => {
           this.temporadaParaExcluir.set(null) // Fecha o modal de confirmação
           this.carregarDadosIniciais()        // Atualiza a listagem
