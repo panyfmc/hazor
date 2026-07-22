@@ -29,6 +29,8 @@ async function buscarPorOficina(oficinaId) {
             SELECT *
             FROM Atividades
             WHERE OficinaId = @oficinaId
+                AND DeletedAt IS NULL
+            ORDER BY Id DESC
         `)
 
     return result.recordset[0]
@@ -38,8 +40,10 @@ async function excluir(id) {
     await new sql.Request()
         .input('id', sql.Int, id)
         .query(`
-            DELETE FROM Atividades
+            UPDATE Atividades
+            SET DeletedAt = GETUTCDATE()
             WHERE Id = @id
+                AND DeletedAt IS NULL
         `)
 }
 
@@ -49,7 +53,8 @@ async function encerrar(id) {
         .query(`
             UPDATE Atividades
             SET Encerrada = 1
-            WHERE Id = @id
+            WHERE Id = @id  
+                AND DeletedAt IS NULL
         `)
 }
 
@@ -57,6 +62,7 @@ async function contar() {
     const result = await new sql.Request().query(`
         SELECT COUNT(*) AS Total
         FROM Atividades
+        WHERE DeletedAt IS NULL
     `)
 
     return result.recordset[0].Total

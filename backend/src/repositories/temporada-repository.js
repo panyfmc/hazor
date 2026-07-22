@@ -88,15 +88,49 @@ async function excluir(id) {
 
         // Realiza o Soft Delete
         await req.query(`
-            UPDATE Temporadas 
+            UPDATE Entregas
             SET DeletedAt = GETUTCDATE()
-            WHERE Id = @id
+            WHERE AtividadeId IN (
+                SELECT Id
+                FROM Atividades
+                WHERE OficinaId IN (
+                    SELECT Id
+                    FROM Oficinas
+                    WHERE TemporadaId = @id
+                )
+            )
+                AND DeletedAt IS NULL
+                    
+            UPDATE Presencas
+            SET DeletedAt = GETUTCDATE()
+            WHERE OficinaId IN (
+                SELECT Id
+                FROM Oficinas
+                WHERE TemporadaId = @id
+            )
+                AND DeletedAt IS NULL
+
+            UPDATE Atividades
+            SET DeletedAt = GETUTCDATE()
+            WHERE OficinaId IN (
+                SELECT Id
+                FROM Oficinas
+                WHERE TemporadaId = @id
+            )
+                AND DeletedAt IS NULL
 
             UPDATE Oficinas 
             SET DeletedAt = GETUTCDATE()
             WHERE TemporadaId = @id
-        `)
+                AND DeletedAt IS NULL
 
+            UPDATE Temporadas 
+            SET DeletedAt = GETUTCDATE()
+            WHERE Id = @id
+                AND DeletedAt IS NULL
+
+        `)
+                
         // Se era a ativa, ativa automaticamente a próxima mais recente
         if (eraAtiva) {
             await req.query(`
