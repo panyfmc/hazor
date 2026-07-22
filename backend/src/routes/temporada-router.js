@@ -2,9 +2,9 @@ const router = require('express').Router()
 const controller = require('../controllers/temporada-controller')
 
 router.get('/', controller.listar)
-router.get('/ativa', controller.buscarAtiva)
+router.get('/:id', controller.buscarPorId)
 router.post('/', controller.criar)
-router.patch('/:id/ativar', controller.ativar)
+router.put('/:id', controller.atualizar)
 router.delete('/:id', controller.excluir)
 
 module.exports = router
