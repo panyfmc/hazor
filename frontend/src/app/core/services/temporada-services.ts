@@ -16,12 +16,12 @@ export class temporadaService {
         return this.http.post(this.apiUrl, temporada)
     }
 
-    buscarTemporadaAtiva() {
-        return this.http.get<any>(`${this.apiUrl}/ativa`)
+    buscarPorId(id: number) {
+        return this.http.get<any>(`${this.apiUrl}/${id}`)
     }
 
-    ativarTemporada(id: number) {
-        return this.http.patch(`${this.apiUrl}/${id}/ativar`, {})
+    atualizar(id: number, temporada: any) {
+        return this.http.put(`${this.apiUrl}/${id}`, temporada)
     }
 
     excluirTemporada(id: number) {
