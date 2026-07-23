@@ -1,13 +1,16 @@
-import { Component, inject, OnInit, signal, effect, computed, HostListener, ElementRef } from '@angular/core' // signal pra resolver o problema de Detecção de Mudanças (Change Detection)
+import { Component, inject, EventEmitter, Output, OnInit, signal, effect, computed, HostListener, ElementRef } from '@angular/core' // signal pra resolver o problema de Detecção de Mudanças (Change Detection)
 import { temporadaService } from '../../core/services/temporada-services'
 import { AulaService } from '../../core/services/aulas-services'
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { AlunoService } from '../../core/services/aluno-service'
 import { AlunoMapper } from '../../core/mappers/aluno-mapper'
-import { NovaTemporada } from './componentes/nova-temporada/nova-temporada'
+import { NovaTemporada } from './componentes/cadastro-temporada/cadastro-temporada'
 import { CriarOficina, NovaOficina } from './componentes/nova-oficina/nova-oficina'
 import { EditarOficina } from './componentes/editar-oficina/editar-oficina'
+import { GrupoMapper } from '../../core/mappers/grupo-mapper'
+import { GrupoService } from '../../core/services/grupo-service'
+import { Grupo } from '../../shared/models/grupo-model'
 
 @Component({ 
   selector: 'app-registros',
@@ -19,8 +22,7 @@ export class Registros implements OnInit {
   private temporadaService = inject(temporadaService)
   private aulaService = inject(AulaService)
   private alunoService = inject(AlunoService)
-  private elementRef = inject(ElementRef)
-  // Inicializa a temporada como um Signal
+  private grupoService = inject(GrupoService)
   listaTemporadas = signal<any[]>([])
   temporada = signal<any>(null)
   oficinas = signal<any[]>([])
@@ -28,13 +30,39 @@ export class Registros implements OnInit {
   menuAbertoId = signal<number | null>(null)
   temporadaParaExcluir = signal<any | null>(null)
   dropdownTemporadaAberto = false
-  mostrarModalTemporada = false
+  mostrarModalCriarTemporada = false
   mostrarModalOficina = false
   mostrarModalEditarOficina = false
   oficinaParaEditar = signal<any | null>(null)
+  grupos: Grupo[] = []
+  @Output() fechar = new EventEmitter<void>() 
 
-  abrirModalTemporada() { this.mostrarModalTemporada = true }
-  fecharModalTemporada() { this.mostrarModalTemporada = false }
+  ngOnInit() {
+    this.carregarAlunos()   
+    this.carregarDadosIniciais()
+  }
+
+  toggleDropdownTemporada() {
+    this.dropdownTemporadaAberto = !this.dropdownTemporadaAberto
+  }
+
+  selecionarTemporada(temp: any) {
+    this.temporada.set(temp)
+    this.dropdownTemporadaAberto = false
+  }
+
+  getTemporadaSelecionadaNome(): string {
+    const temporada = this.temporada()
+
+    if (!temporada) {
+      return 'Selecione uma temporada'
+    }
+
+    return temporada.Nome
+  }
+
+  abrirModalCriarTemporada() { this.mostrarModalCriarTemporada = true }
+  fecharModalCriarTemporada() { this.mostrarModalCriarTemporada = false }
 
   abrirModalOficina() { this.mostrarModalOficina = true }
   fecharModalNovaOficina() { this.mostrarModalOficina = false }
@@ -68,22 +96,16 @@ export class Registros implements OnInit {
   }
 
   totalFotografia = computed(() => {
-    return this.oficinas().filter(o => o.DepartamentoId === 1).length
+    return this.grupos.filter(o => o.id === 1).length
   })
 
   totalProducao = computed(() => {
-    return this.oficinas().filter(o => o.DepartamentoId === 2).length
+    return this.grupos.filter(o => o.id === 2).length
   })
 
   totalDesign = computed(() => {
-    return this.oficinas().filter(o => o.DepartamentoId === 3).length
+    return this.grupos.filter(o => o.id === 3).length
   })
-
-  ngOnInit() {
-    this.carregarAlunos()   
-    this.carregarDadosIniciais()
-
-  }
 
   carregarDadosIniciais() {
     this.temporadaService.listarTemporadas().subscribe({
@@ -92,23 +114,23 @@ export class Registros implements OnInit {
         if(temporadas.length > 0) {
           this.temporada.set(temporadas[0])
         }
+        this.totalFotografia
+        this.totalDesign
+        this.totalProducao
       },
       error: (err) => console.error('Erro ao buscar temporadas:', err)
     })
   }
 
-  toggleDropdownTemporada() {
-    this.dropdownTemporadaAberto = !this.dropdownTemporadaAberto
-  }
-
-  selecionarTemporada(temp: any) {
-    this.temporada.set(temp)
-    this.dropdownTemporadaAberto = false
-  }
-
-  private carregarAulas(temporadaId: number) {
-    this.aulaService.listarAulas(temporadaId).subscribe(res => {
-      this.oficinas.set(res) // Alimenta o signal das oficinas
+  carregarAulas(temporadaId: number) {
+    this.aulaService.listarAulas(temporadaId).subscribe({
+      next: res => {
+        this.oficinas.set(res)
+      },
+      error: err => {
+        console.error('Erro ao carregar aulas', err)
+        console.log(err.error)
+      }
     })
   }
 
@@ -126,7 +148,7 @@ export class Registros implements OnInit {
     this.temporadaService.criarTemporada(novo).subscribe({
       next: () => {
         this.carregarDadosIniciais(),
-        this.fecharModalTemporada()
+        this.fecharModalCriarTemporada()
       },
       error: erro => console.error('Erro ao salvar temporada:', erro)
     })
@@ -159,7 +181,7 @@ export class Registros implements OnInit {
     this.temporadaService.atualizar(dados.id, dados).subscribe({
       next: () => {
         this.carregarDadosIniciais()
-        this.fecharModalTemporada()
+        this.fecharModalCriarTemporada()
       }
     })
   }
@@ -168,7 +190,6 @@ export class Registros implements OnInit {
     this.temporadaService.excluirTemporada(id).subscribe({
       next: () => {
         this.carregarDadosIniciais()
-        this.abrirModalTemporada()
       }
     })
   }
@@ -187,13 +208,18 @@ export class Registros implements OnInit {
   }
 
 
-  @HostListener('document:click')
-    fecharMenus() {
-        this.menuAbertoId.set(null)
+  @HostListener('document:click', ['$event'])
+    cliqueFora(event: Event) {
+      const alvo = event.target as HTMLElement
+      if(alvo.closest('.dropdown-temporada')) {
+        return
+      }
+      this.dropdownTemporadaAberto = false
     }
 
-    alternarMenu(id: number, event: Event) {
-        event.stopPropagation()
-        this.menuAbertoId.set(this.menuAbertoId() === id ? null : id)
-    }
+  fecharModal() {
+    this.fechar.emit()
+  }
+  // this.salvar.emit(NovaTemporada)
+  // this.fecharModal()
 }

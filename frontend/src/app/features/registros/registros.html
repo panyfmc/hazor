@@ -6,20 +6,20 @@
       <p class="mt-1 text-sm text-slate-500">Controle operacional e histórico de oficinas e atividades.</p>
     </div>
 
-    <div class="relative items-center gap-2 self-start sm:self-auto">
+    <div class="relative dropdown-temporada items-center gap-2 self-start sm:self-auto">
 
       <button
         (click)="toggleDropdownTemporada()"
-        class="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 shadow-sm hover:border-slate-300 transition">
+        class="flex items-center cursor-pointer gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 shadow-sm hover:border-slate-300 transition">
 
-        <i class="pi pi-calendar text-slate-400"></i>
+        <i class="pi pi-face-smile text-slate-400"></i>
 
-        <span class="text-xs font-semibold text-slate-700">
+        <span class="text-sm font-semibold text-slate-600">
           {{ temporada()?.Nome ?? 'Nenhuma temporada' }}
         </span>
 
         <i
-          class="pi pi-chevron-down text-[10px] transition-transform cursor-pointer"
+          class="pi pi-chevron-down text-[10px] transition-transform"
           [class.rotate-180]="dropdownTemporadaAberto">
         </i>
 
@@ -30,41 +30,40 @@
         <div class="absolute left-0 md:left-auto md:right-0 mt-2 w-64 max-w-[calc(100vw-2rem)] rounded-2xl border border-slate-200 bg-white p-1 shadow-xl z-50">
 
           @if (listaTemporadas().length > 0) {
-            @for (temp of listaTemporadas(); track temp.Id) {
-              <!-- Mudamos de um <button> direto para uma div flex, separando o texto e a ação -->
-              <div class="group flex w-full items-center justify-between rounded-xl px-3 py-2 text-sm hover:bg-slate-50 transition-colors">
-                
-                <!-- Lado Esquerdo: Área clicável para SELECIONAR a temporada -->
-                <button 
-                  type="button"
-                  (click)="selecionarTemporada(temp)"
-                  class="flex-1 text-left truncate pr-2 font-medium text-slate-700 cursor-pointer">
-                  {{ temp.Nome }}
-                </button>
-
-                <!-- Lado Direito: Ícones de Status e Ação -->
-                <div class="flex items-center gap-2.5">
-                  <!-- Mostra o Check se for a selecionada -->
-                  @if (temp.Id === temporada()?.Id) {
-                    <i class="pi pi-check text-blue-600 text-xs"></i>
-                  }
-
-                  <!-- Botão da Lixeira (excluir) -->
-                  <!-- O '$event.stopPropagation()' mata o clique aqui, impedindo que execute o selecionarTemporada -->
+            <div class="max-h-64 overflow-y-auto">
+              @for (temp of listaTemporadas(); track temp.Id) {
+                <!-- Mudamos de um <button> direto para uma div flex, separando o texto e a ação -->
+                <div class="group flex w-full items-center justify-between rounded-xl px-3 py-2 text-sm hover:bg-slate-50 transition-colors">
+                  
+                  <!-- Lado Esquerdo: Área clicável para SELECIONAR a temporada -->
                   <button 
                     type="button"
-                    (click)="$event.stopPropagation(); temporadaParaExcluir.set(temp)" 
-                    class="rounded p-1 text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition cursor-pointer"
-                    title="Excluir temporada">
-                    <i class="pi pi-trash text-xs"></i>
+                    (click)="selecionarTemporada(temp)"
+                    class="flex-1 text-left truncate pr-2 font-medium text-slate-700 cursor-pointer">
+                    {{ temp.Nome }}
                   </button>
+  
+                  <!-- Lado Direito: Ícones de Status e Ação -->
+                  <div class="flex items-center gap-2.5">
+                    <!-- Mostra o Check se for a selecionada -->
+                    @if (temp.Id === temporada()?.Id) {
+                      <i class="pi pi-check text-blue-600 text-xs"></i>
+                    }
+  
+                    <!-- Botão da Lixeira (excluir) -->
+                    <!-- O '$event.stopPropagation()' mata o clique aqui, impedindo que execute o selecionarTemporada -->
+                    <button 
+                      type="button"
+                      (click)="$event.stopPropagation(); temporadaParaExcluir.set(temp)" 
+                      class="rounded p-1 text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition cursor-pointer"
+                      title="Excluir temporada">
+                      <i class="pi pi-trash text-xs"></i>
+                    </button>
+                  </div>
+  
                 </div>
-
-              </div>
-            }
-
-            <div class="my-1 border-t"></div>
-
+              }
+            </div>
           } @else {
             <p class="px-3 py-4 text-center text-sm text-slate-500">
               Nenhuma temporada cadastrada.
@@ -72,17 +71,17 @@
           }
 
           <button
-            (click)="abrirModalTemporada()"
-            class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-blue-600 hover:bg-blue-50">
+            (click)="abrirModalCriarTemporada()"
+            class="flex w-full items-center cursor-pointer gap-2 rounded-xl px-3 py-2 text-sm text-blue-600 hover:bg-blue-50">
             <i class="pi pi-plus"></i>
             {{ listaTemporadas().length ? 'Nova temporada' : 'Criar primeira temporada' }}
           </button>
           
-          @if(mostrarModalTemporada) {
-            <app-nova-temporada
-            (fechar)="fecharModalTemporada()"
+          @if(mostrarModalCriarTemporada) {
+            <app-cadastro-temporada
+            (fechar)="fecharModalCriarTemporada()"
             (salvar)="salvarNovaTemporada($event)">
-            </app-nova-temporada>
+            </app-cadastro-temporada>
           }
 
         </div>
