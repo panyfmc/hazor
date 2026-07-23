@@ -5,7 +5,11 @@ async function listar(temporadaId) {
     
     let query = `
         SELECT
-            O.*,
+            O.Id,
+            O.TemporadaId,
+            O.DepartamentoId,
+            O.DataAula,
+            O.TeveAtividade,
             COUNT(P.Id) AS TotalPresentes
         FROM Oficinas O
         LEFT JOIN Presencas P
