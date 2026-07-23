@@ -80,10 +80,6 @@ export class Registros implements OnInit {
   })
 
   ngOnInit() {
-    this.temporadaService.buscarTemporadaAtiva().subscribe(res => {
-      this.temporada.set(res)
-    })
-    
     this.carregarAlunos()   
     this.carregarDadosIniciais()
 
@@ -91,28 +87,14 @@ export class Registros implements OnInit {
 
   carregarDadosIniciais() {
     this.temporadaService.listarTemporadas().subscribe({
-      next: (dadosDoBanco) => {
-        this.listaTemporadas.set(dadosDoBanco)
-
-        const ativa = dadosDoBanco.find(temp => temp.Ativa === 1)
-        if (ativa) {
-          this.temporada.set(ativa)
-        } else if (dadosDoBanco.length > 0) {
-          this.temporada.set(dadosDoBanco[0])
+      next: (temporadas) => {
+        this.listaTemporadas.set(temporadas)
+        if(temporadas.length > 0) {
+          this.temporada.set(temporadas[0])
         }
       },
       error: (err) => console.error('Erro ao buscar temporadas:', err)
     })
-
-    const tempId = this.temporada()?.Id
-    if (tempId) {
-      this.aulaService.listarAulas(tempId).subscribe({
-        next: (oficinas) => {
-          this.oficinas.set(oficinas)
-        },
-        error: (err) => console.error('Erro ao recarregar oficinas:', err)
-      })
-    }
   }
 
   toggleDropdownTemporada() {
@@ -173,10 +155,20 @@ export class Registros implements OnInit {
     })
   }
 
+  atualizarTemporada(dados: any) {
+    this.temporadaService.atualizar(dados.id, dados).subscribe({
+      next: () => {
+        this.carregarDadosIniciais()
+        this.fecharModalTemporada()
+      }
+    })
+  }
+
   excluirTemporada(id: number) {
     this.temporadaService.excluirTemporada(id).subscribe({
       next: () => {
         this.carregarDadosIniciais()
+        this.abrirModalTemporada()
       }
     })
   }
