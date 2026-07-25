@@ -398,6 +398,7 @@
 
 @if (mostrarModalOficina) {
   <app-nova-oficina
+    [temporadaId]="temporada()?.Id"
       [alunos]="alunos()"
       (fechar)="fecharModalNovaOficina()"
       (salvar)="salvarNovaOficina($event)">
