@@ -1,13 +1,11 @@
-import { Component, EventEmitter, Input, Output, computed, signal, HostListener } from '@angular/core'
+import { Component, EventEmitter, Input, Output, computed, signal, inject, HostListener, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
+import { CriarOficina, FormularioOficina } from '../../../../shared/models/oficina-models'
+import { DepartamentoService } from '../../../../core/services/departamento-service'
+import { DepartamentoMapper } from '../../../../core/mappers/departamento-mapper'
+import { Departamento } from '../../../../shared/models/departamento-models'
 
-export interface CriarOficina {
-  dataAula: string
-  departamentoId: number | null
-  presentes: number[]
-  teveAtividade: boolean
-}
 
 @Component({
   selector: 'app-nova-oficina',
@@ -19,9 +17,22 @@ export interface CriarOficina {
   templateUrl: './nova-oficina.html'
 })
 
-export class NovaOficina {
+export class NovaOficina implements OnInit {
+  @Input({ required: true }) temporadaId!: number
   @Output() fechar = new EventEmitter<void>()
   @Output() salvar = new EventEmitter<CriarOficina>()
+  private departamentoService = inject(DepartamentoService)
+  departamentos: Departamento[] = []
+
+  ngOnInit() {
+    this.carregarDepartamentos()
+  }
+
+  carregarDepartamentos() {
+    this.departamentoService.listar().subscribe(departamentos => {
+      this.departamentos = departamentos.map(DepartamentoMapper.fromApi)
+    })
+  }
 
   @Input() set alunos(valor: any[]) {
     this._alunos.set(valor ?? [])
@@ -35,7 +46,7 @@ export class NovaOficina {
   @Input() salvando = false
   @Input() sucesso = false
 
-  formulario: CriarOficina = {
+  formulario: FormularioOficina = {
     dataAula: '',
     departamentoId: null,
     presentes: [],
@@ -43,12 +54,6 @@ export class NovaOficina {
   }
 
   pesquisa = signal('')
-
-  departamentos = [
-    { id: 1, nome: 'Fotografia' },
-    { id: 2, nome: 'Produção' },
-    { id: 3, nome: 'Design' }
-  ]
 
   alunosFiltrados = computed(() => {
     const texto = this.pesquisa().trim().toLowerCase()
@@ -133,7 +138,16 @@ export class NovaOficina {
     if (this.formulario.departamentoId === null) {
       return
     }
+    
+    const oficina: CriarOficina = {
+      temporadaId: this.temporadaId,
+      departamentoId: this.formulario.departamentoId,
+      dataAula: this.formulario.dataAula,
+      presentes: this.formulario.presentes,
+      teveAtividade: this.formulario.teveAtividade
+    }
+    console.log(oficina)
 
-    this.salvar.emit(this.formulario)
+    this.salvar.emit(oficina)
   }
 }
