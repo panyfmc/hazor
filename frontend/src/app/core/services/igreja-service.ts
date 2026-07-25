@@ -7,9 +7,10 @@ import { HttpClient } from '@angular/common/http'
 export class IgrejaService {
 
   private http = inject(HttpClient)
+  private apiUrl = 'http://localhost:3000/igrejas/regiao'
 
   listarPorRegiao(regiaoId: number) {
-    return this.http.get<any[]>(`http://localhost:3000/igrejas/regiao/${regiaoId}`)
+    return this.http.get<any[]>(`${this.apiUrl}/${regiaoId}`)
   }
 
 }

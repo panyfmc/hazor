@@ -7,9 +7,10 @@ import { HttpClient } from '@angular/common/http'
 export class GrupoService {
 
   private http = inject(HttpClient)
+  private apiUrl = 'http://localhost:3000/grupos'
 
   listar() {
-    return this.http.get<any[]>('http://localhost:3000/grupos')
+    return this.http.get<any[]>(this.apiUrl)
   }
 
 }
