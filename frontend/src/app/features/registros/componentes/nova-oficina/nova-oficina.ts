@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, computed, signal, inject, HostListener, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
-import { CriarOficina, FormularioOficina } from '../../../../shared/models/oficina-models'
+import { CriarOficina, FormularioOficina } from '../../../../shared/models/aula-models'
 import { DepartamentoService } from '../../../../core/services/departamento-service'
 import { DepartamentoMapper } from '../../../../core/mappers/departamento-mapper'
 import { Departamento } from '../../../../shared/models/departamento-models'
