@@ -6,10 +6,10 @@ import { RouterModule } from '@angular/router'
 import { AlunoService } from '../../core/services/aluno-service'
 import { AlunoMapper } from '../../core/mappers/aluno-mapper'
 import { NovaTemporada } from './componentes/cadastro-temporada/cadastro-temporada'
-import { CriarOficina } from '../../shared/models/oficina-models'
+import { CriarOficina, Oficina } from '../../shared/models/aula-models'
 import { EditarOficina } from './componentes/editar-oficina/editar-oficina'
 import { NovaOficina } from './componentes/nova-oficina/nova-oficina'
-import { Grupo } from '../../shared/models/grupo-model'
+
 
 
 
@@ -34,7 +34,7 @@ export class Registros implements OnInit {
   mostrarModalOficina = false
   mostrarModalEditarOficina = false
   oficinaParaEditar = signal<any | null>(null)
-  grupos: Grupo[] = []
+  aulasPorDepartamento: Oficina[] = []
   @Output() fechar = new EventEmitter<void>() 
 
   ngOnInit() {
@@ -96,15 +96,15 @@ export class Registros implements OnInit {
   }
 
   totalFotografia = computed(() => {
-    return this.grupos.filter(o => o.id === 1).length
+    return this.aulasPorDepartamento.filter(o => o.id === 1).length
   })
 
   totalProducao = computed(() => {
-    return this.grupos.filter(o => o.id === 2).length
+    return this.aulasPorDepartamento.filter(o => o.id === 2).length
   })
 
   totalDesign = computed(() => {
-    return this.grupos.filter(o => o.id === 3).length
+    return this.aulasPorDepartamento.filter(o => o.id === 3).length
   })
 
   carregarDadosIniciais() {
