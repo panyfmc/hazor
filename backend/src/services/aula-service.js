@@ -18,7 +18,6 @@ async function buscarPorId(id) {
 }
 
 async function criar(dados) {
-    const temporada = await temporadaRepository.buscarAtiva()
     const oficina = await oficinaRepository.criar({
         temporadaId: temporada.Id,
         departamentoId: dados.departamentoId,
