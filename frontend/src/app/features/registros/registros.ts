@@ -1,16 +1,17 @@
 import { Component, inject, EventEmitter, Output, OnInit, signal, effect, computed, HostListener, ElementRef } from '@angular/core' // signal pra resolver o problema de Detecção de Mudanças (Change Detection)
 import { temporadaService } from '../../core/services/temporada-services'
-import { AulaService } from '../../core/services/aulas-services'
+import { AulaService } from '../../core/services/aula-services'
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { AlunoService } from '../../core/services/aluno-service'
 import { AlunoMapper } from '../../core/mappers/aluno-mapper'
 import { NovaTemporada } from './componentes/cadastro-temporada/cadastro-temporada'
-import { CriarOficina, NovaOficina } from './componentes/nova-oficina/nova-oficina'
+import { CriarOficina } from '../../shared/models/oficina-models'
 import { EditarOficina } from './componentes/editar-oficina/editar-oficina'
-import { GrupoMapper } from '../../core/mappers/grupo-mapper'
-import { GrupoService } from '../../core/services/grupo-service'
+import { NovaOficina } from './componentes/nova-oficina/nova-oficina'
 import { Grupo } from '../../shared/models/grupo-model'
+
+
 
 @Component({ 
   selector: 'app-registros',
@@ -22,7 +23,6 @@ export class Registros implements OnInit {
   private temporadaService = inject(temporadaService)
   private aulaService = inject(AulaService)
   private alunoService = inject(AlunoService)
-  private grupoService = inject(GrupoService)
   listaTemporadas = signal<any[]>([])
   temporada = signal<any>(null)
   oficinas = signal<any[]>([])

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, effect, signal, computed, HostListener } from '@angular/core'
 import { temporadaService } from '../../../../core/services/temporada-services'
-import { AulaService } from '../../../../core/services/aulas-services'
+import { AulaService } from '../../../../core/services/aula-services'
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { AlunoService } from '../../../../core/services/aluno-service'
