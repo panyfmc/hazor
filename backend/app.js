@@ -10,6 +10,7 @@ const grupoRouter = require('./src/routes/grupo-router')
 const temporadaRouter = require('./src/routes/temporada-router')
 const aulaRouter = require('./src/routes/aula-router')
 const atividadeRouter = require('./src/routes/atividade-router')
+const departamentoRouter = require('./src/routes/departamento-router')
 
 app.use('/alunos', alunoRoutes)
 app.use('/igrejas', igrejaRoutes)
@@ -18,6 +19,7 @@ app.use('/grupos', grupoRouter)
 app.use('/temporadas', temporadaRouter)
 app.use('/aulas', aulaRouter)
 app.use('/atividades', atividadeRouter)
+app.use('/departamentos', departamentoRouter)
 
 
 module.exports = app
