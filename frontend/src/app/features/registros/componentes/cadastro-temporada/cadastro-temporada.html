@@ -16,17 +16,14 @@
             class="space-y-4">
 
             <!-- NOME -->
-
             <div>
-                <label
-                class="mb-1 block text-sm font-medium text-slate-700">
-                Nome
+                <label class="mb-1 block text-sm font-medium text-slate-700">
+                    Nome
                 </label>
 
                 <input
                 type="text" name="Nome" [(ngModel)]="formulario.nome" required
                 class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
-
             </div>
 
             <!-- DATA DE INICIO -->
@@ -34,18 +31,13 @@
             <div class="grid grid-cols-2 gap-4">
 
                 <div>
-
-                    <label
-                    class="mb-1 block text-sm font-medium text-slate-700">
-
-                    Data de Início
-
+                    <label class="mb-1 block text-sm font-medium text-slate-700">
+                        Data de Início
                     </label>
 
                     <input
                     type="date" name="dataInicio" [(ngModel)]="formulario.dataInicio" required
                     class="w-full rounded-xl cursor-pointer border border-slate-200 px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
-
                 </div>
 
             </div>
@@ -58,7 +50,7 @@
                 type="button"
                 (click)="fecharModal()"
                 class="cursor-pointer rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50">
-                Cancelar
+                    Cancelar
                 </button>
 
                 <button
@@ -66,12 +58,11 @@
                 [disabled]="!alunoForm.form.valid"
                 (click)="$event.stopPropagation()"
                 class="cursor-pointer rounded-xl bg-blue-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50">
-                Criar
+                    Criar
                 </button>
             </div>
 
         </form>   
-
         
     </div>
 </div>
