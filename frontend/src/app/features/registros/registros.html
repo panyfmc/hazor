@@ -131,28 +131,27 @@
             </thead>
 
             <tbody class="divide-y divide-slate-100 text-sm text-slate-600">
-              @for (oficina of limiteExibicao(); track oficina.Id) {
+              @for (oficina of limiteExibicao(); track oficina.id) {
                 <tr class="hover:bg-slate-50/60 transition-colors">
 
                   <td class="py-3 font-medium text-slate-900">
-                    {{ oficina.DataAula.split('-')[2].substring(0, 2)}}/{{ oficina.DataAula.split('-')[1].substring(0, 2) }}/{{ oficina.DataAula.split('-')[0].substring(0, 4) }}
-
+                    {{ oficina.dataAula | date: 'dd/MM/yyyy' : 'UTC' }}
                   </td>
                   
                   <td class="py-3">
                     <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 font-medium text-slate-800">
-                      {{ oficina.DepartamentoId === 3 ? 'Design' : (oficina.DepartamentoId === 1 ? 'Fotografia' : 'Produção') }}
+                      {{ oficina.departamentoId === 1 ? 'Design' : (oficina.departamentoId === 2 ? 'Fotografia' : 'Produção') }}
                     </span>
                   </td>
                   
                   <td class="py-3 text-center">
                     <span class="font-semibold text-slate-700">
-                      {{ oficina.TotalPresentes || 0 }} de {{ totalAlunosAtivos() }}
+                      {{ oficina.totalPresentes || 0 }} de {{ totalAlunosAtivos() }}
                     </span>
                   </td>
 
                   <td class="py-3 text-center">
-                    @if (oficina.TeveAtividade) {
+                    @if (oficina.teveAtividade) {
                       <span class="inline-flex items-center gap-1 text-emerald-600 font-medium">
                         Sim
                       </span>
@@ -171,7 +170,7 @@
                         <i class="pi pi-pencil text-sm"></i>
                       </button>
       
-                      @if (menuAbertoId() === oficina.Id) {
+                      @if (menuAbertoId() === oficina.id) {
                           <div class="absolute right-2 top-full w-26 rounded-xl bg-white p-1 shadow-lg border border-slate-100 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
                               <button 
                                 class="w-full text-left px-2 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50 rounded-2xl cursor-pointer transition">
