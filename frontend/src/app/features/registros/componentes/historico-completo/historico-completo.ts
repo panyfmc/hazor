@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, effect, signal, computed, HostListener } from '@angular/core'
-import { temporadaService } from '../../../../core/services/temporada-services'
-import { AulaService } from '../../../../core/services/aula-services'
+import { temporadaService } from '../../../../core/services/temporada-service'
+import { OficinaService } from '../../../../core/services/oficina-service'
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { AlunoService } from '../../../../core/services/aluno-service'
@@ -15,7 +15,7 @@ import { EditarOficina } from '../editar-oficina/editar-oficina'
 })
 export class HistoricoCompleto implements OnInit { // <-- Contrato assinado aqui
     private temporadaService = inject(temporadaService)
-    private aulaService = inject(AulaService)
+    private oficinaService = inject(OficinaService)
     private alunoService = inject(AlunoService)
     listaTemporadas = signal<any[]>([])
     temporada = signal<any>(null)
@@ -59,7 +59,7 @@ export class HistoricoCompleto implements OnInit { // <-- Contrato assinado aqui
 
         const tempId = this.temporada()?.Id
         if (tempId) {
-        this.aulaService.listarAulas(tempId).subscribe({
+        this.oficinaService.listarOficinas(tempId).subscribe({
             next: (oficinas) => {
             this.oficinas.set(oficinas)
             },
@@ -69,7 +69,7 @@ export class HistoricoCompleto implements OnInit { // <-- Contrato assinado aqui
     }
 
     salvarEditarOficina(dados: any) {
-    this.aulaService.atualizar(dados.id, dados).subscribe({
+    this.oficinaService.atualizar(dados.id, dados).subscribe({
       next: () => {
         console.log("✅ SALVOU com sucesso!")
         this.carregarDadosIniciais()
@@ -134,7 +134,7 @@ export class HistoricoCompleto implements OnInit { // <-- Contrato assinado aqui
     }
 
     private carregarAulas(temporadaId: number) {
-        this.aulaService.listarAulas(temporadaId).subscribe(res => {
+        this.oficinaService.listarOficinas(temporadaId).subscribe(res => {
         this.oficinas.set(res) // Alimenta o signal das oficinas
         })
     }

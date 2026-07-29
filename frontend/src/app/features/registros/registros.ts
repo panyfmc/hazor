@@ -1,6 +1,6 @@
 import { Component, inject, EventEmitter, Output, OnInit, signal, effect, computed, HostListener, ElementRef } from '@angular/core' // signal pra resolver o problema de Detecção de Mudanças (Change Detection)
-import { temporadaService } from '../../core/services/temporada-services'
-import { AulaService } from '../../core/services/aula-services'
+import { temporadaService } from '../../core/services/temporada-service'
+import { OficinaService } from '../../core/services/oficina-service'
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 import { AlunoService } from '../../core/services/aluno-service'
@@ -11,6 +11,7 @@ import { EditarOficina } from './componentes/editar-oficina/editar-oficina'
 import { NovaOficina } from './componentes/nova-oficina/nova-oficina'
 import { EditarTemporada } from './componentes/editar-temporada/editar-temporada'
 import { TemporadaMapper } from '../../core/mappers/temporada-mapper'
+import { OficinaMapper } from '../../core/mappers/oficina-mapper'
 
 
 
@@ -22,7 +23,7 @@ import { TemporadaMapper } from '../../core/mappers/temporada-mapper'
 })
 export class Registros implements OnInit {
   private temporadaService = inject(temporadaService)
-  private aulaService = inject(AulaService)
+  private oficinaService = inject(OficinaService)
   private alunoService = inject(AlunoService)
   listaTemporadas = signal<any[]>([])
   temporada = signal<any>(null)
@@ -96,7 +97,7 @@ export class Registros implements OnInit {
     effect(() => {
       const tempId = this.temporada()?.id
       if(tempId) {
-        this.carregarAulas(tempId)
+        this.carregarOficinas(tempId)
       }
     })
   }
@@ -129,13 +130,14 @@ export class Registros implements OnInit {
     })
   }
 
-  carregarAulas(temporadaId: number) {
-    this.aulaService.listarAulas(temporadaId).subscribe({
-      next: res => {
-        this.oficinas.set(res)
+  carregarOficinas(temporadaId: number) {
+    this.oficinaService.listarOficinas(temporadaId).subscribe({
+      next: (res: any[]) => {
+        const aulasMap = res.map(OficinaMapper.fromApi)
+        this.oficinas.set(aulasMap)
       },
       error: err => {
-        console.error('Erro ao carregar aulas', err)
+        console.error('Erro ao carregar oficinas', err)
         console.log(err.error)
       }
     })
@@ -173,7 +175,7 @@ export class Registros implements OnInit {
   }
 
   salvarNovaOficina(oficina: CriarOficina) {
-    this.aulaService.criarAula(oficina).subscribe({
+    this.oficinaService.criarOficina(oficina).subscribe({
       next: () => {
         this.carregarDadosIniciais()
         this.fecharModalNovaOficina()
@@ -185,7 +187,7 @@ export class Registros implements OnInit {
   }
 
   salvarEditarOficina(dados: any) {
-    this.aulaService.atualizar(dados.id, dados).subscribe({
+    this.oficinaService.atualizar(dados.id, dados).subscribe({
       next: () => {
         console.log("✅ SALVOU com sucesso!")
         this.carregarDadosIniciais()
