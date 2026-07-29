@@ -30,7 +30,7 @@
           </button>
 
           @if (dropdownRegiaoAberto) {
-            <div class="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white p-1 shadow-lg animate-fadeIn">
+            <div class="relative z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white p-1 shadow-lg animate-fadeIn">
               <button type="button" (click)="selecionarRegiao(0)" class="w-full text-left rounded-lg px-3 py-2 text-sm text-gray-500 hover:bg-slate-100">
                 Selecione uma região
               </button>
@@ -59,7 +59,7 @@
           </button>
 
           @if (dropdownIgrejaAberto) {
-            <div class="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white p-1 shadow-lg animate-fadeIn">
+            <div class="relative z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white p-1 shadow-lg animate-fadeIn">
               <button type="button" (click)="selecionarIgreja(null)" class="w-full text-left rounded-lg px-3 py-2 text-sm text-gray-500 hover:bg-slate-100">
                 Selecione uma igreja
               </button>
@@ -95,7 +95,7 @@
             </button>
 
             @if (dropdownGrupoAberto) {
-              <div class="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white p-1 shadow-lg animate-fadeIn">
+              <div class="relative z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white p-1 shadow-lg animate-fadeIn">
                 <button type="button" (click)="selecionarGrupo(null)" class="w-full text-left rounded-lg px-3 py-2 text-sm text-gray-500 hover:bg-slate-100">
                   Selecione
                 </button>
