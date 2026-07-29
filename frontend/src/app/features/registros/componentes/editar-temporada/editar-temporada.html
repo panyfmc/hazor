@@ -1,0 +1,115 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <!-- Backdrop de fundo -->
+    <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm" (click)="fecharModal()"></div>
+
+    <!-- Conteúdo do Modal Principal -->
+    <div class="relative w-full max-w-lg rounded-3xl border border-slate-100 bg-white p-6 shadow-2xl transition-all max-h-[90vh] overflow-y-auto">
+        
+        <div class="mb-5 flex items-center justify-between">
+            <h3 class="text-xl font-bold text-slate-900">Editar Temporada</h3>
+            <button type="button" (click)="fecharModal()" class="fechar-modal-btn rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 cursor-pointer transition">
+                <i class="pi pi-times"></i>
+            </button>
+        </div>
+
+        <form (ngSubmit)="onSubmit()" #editarForm="ngForm" class="space-y-4">
+
+            <!-- NOME -->
+            <div>
+                <label class="mb-1 block text-sm font-medium text-slate-700">
+                    Nome
+                </label>
+                <input
+                    type="text" name="Nome" [(ngModel)]="formulario.nome" required
+                    class="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition">
+            </div>
+
+            <!-- DATAS -->
+            <div class="grid grid-cols-2 gap-4">
+                <!-- DATA INICIO -->
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-slate-700">
+                        Data de Início
+                    </label>
+                    <input
+                        type="date" name="dataInicio" [(ngModel)]="formulario.dataInicio" required
+                        class="w-full rounded-xl cursor-pointer border border-slate-200 px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition">
+                </div>
+
+                <!-- DATA FIM -->
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-slate-700">
+                        Data de Fim
+                    </label>
+                    <input
+                        type="date" name="dataFim" [(ngModel)]="formulario.dataFim"
+                        class="w-full rounded-xl cursor-pointer border border-slate-200 px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition">
+                </div>
+            </div>
+
+            <!-- BOTOES DE AÇÃO -->
+            <div class="mt-6 flex justify-between items-center border-t border-slate-100 pt-4">
+                
+                <!-- Botão Excluir Temporada -->
+                <button
+                    type="button"
+                    (click)="abrirConfirmacaoExclusao()"
+                    class="cursor-pointer inline-flex items-center gap-2 rounded-xl border border-red-200 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 transition">
+                    <i class="pi pi-trash text-xs"></i>
+                    Excluir
+                </button>
+
+                <!-- Ações de salvar/cancelar -->
+                <div class="flex gap-3">
+                    <button
+                        type="button"
+                        (click)="fecharModal()"
+                        class="cursor-pointer rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 transition">
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        [disabled]="!editarForm.form.valid"
+                        class="cursor-pointer rounded-xl bg-blue-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50 transition">
+                        Salvar Alterações
+                    </button>
+                </div>
+            </div>
+
+        </form>   
+    </div>
+</div>
+
+<!-- POP-UP DE CONFIRMAÇÃO DE EXCLUSÃO (MIGRADO E INTERNALIZADO) -->
+@if (mostrarConfirmacaoExcluir()) {
+  <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-[60] animate-in fade-in duration-200">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 space-y-6 animate-in zoom-in-95 duration-200">
+      
+      <div class="space-y-2">
+        <h3 class="text-base font-bold text-slate-900">
+          Excluir a temporada "{{ formulario.nome }}"?
+        </h3>
+        <p class="text-xs text-slate-500 leading-relaxed">
+          Essa ação não poderá ser desfeita. <strong class="text-rose-600 font-medium">Todas as oficinas, atividades e presenças</strong> associadas a esta temporada serão permanentemente removidas do sistema.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3 justify-end text-xs font-semibold">
+        <button 
+          type="button"
+          (click)="fecharConfirmacaoExclusao()" 
+          class="px-4 py-2.5 rounded-full text-slate-500 hover:text-slate-800 transition cursor-pointer">
+          Cancelar
+        </button>
+        <button 
+          type="button"
+          (click)="executarExclusaoCompleta()" 
+          class="px-5 py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white shadow-sm transition cursor-pointer">
+          Sim, excluir tudo
+        </button>
+      </div>
+
+    </div>
+  </div>
+}

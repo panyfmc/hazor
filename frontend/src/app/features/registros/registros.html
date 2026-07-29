@@ -15,7 +15,7 @@
         <i class="pi pi-face-smile text-slate-400"></i>
 
         <span class="text-sm font-semibold text-slate-600">
-          {{ temporada()?.Nome ?? 'Nenhuma temporada' }}
+          {{ temporada()?.nome ?? 'Nenhuma temporada' }}
         </span>
 
         <i
@@ -31,7 +31,7 @@
 
           @if (listaTemporadas().length > 0) {
             <div class="max-h-64 overflow-y-auto">
-              @for (temp of listaTemporadas(); track temp.Id) {
+              @for (temp of listaTemporadas(); track temp.id) {
                 <!-- Mudamos de um <button> direto para uma div flex, separando o texto e a ação -->
                 <div class="group flex w-full items-center justify-between rounded-xl px-3 py-2 text-sm hover:bg-slate-50 transition-colors">
                   
@@ -40,24 +40,30 @@
                     type="button"
                     (click)="selecionarTemporada(temp)"
                     class="flex-1 text-left truncate pr-2 font-medium text-slate-700 cursor-pointer">
-                    {{ temp.Nome }}
+                    {{ temp.nome }}
                   </button>
   
                   <!-- Lado Direito: Ícones de Status e Ação -->
                   <div class="flex items-center gap-2.5">
-                    <!-- Mostra o Check se for a selecionada -->
-                    @if (temp.Id === temporada()?.Id) {
+                    @if (temp.id === temporada()?.id) {
                       <i class="pi pi-check text-blue-600 text-xs"></i>
                     }
   
                     <!-- Botão da Lixeira (excluir) -->
                     <!-- O '$event.stopPropagation()' mata o clique aqui, impedindo que execute o selecionarTemporada -->
-                    <button 
+                    <!-- <button 
                       type="button"
                       (click)="$event.stopPropagation(); temporadaParaExcluir.set(temp)" 
                       class="rounded p-1 text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition cursor-pointer"
                       title="Excluir temporada">
                       <i class="pi pi-trash text-xs"></i>
+                    </button> -->
+                    <button 
+                      type="button"
+                      (click)="$event.stopPropagation(); temporadaParaEditar.set(temp)" 
+                      class="rounded p-1 text-slate-400 hover:text-slate-600 transition cursor-pointer"
+                      title="Editar temporada">
+                      <i class="pi pi-pencil text-xs"></i>
                     </button>
                   </div>
   
@@ -363,42 +369,19 @@
   </div>
 </div>
 
-<!-- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO DA TEMPORADA -->
-@if (temporadaParaExcluir()) {
-  <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-[60] animate-in fade-in duration-200">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-xl border border-slate-100 space-y-6 animate-in zoom-in-95 duration-200">
-      
-      <div class="space-y-2">
-        <!-- Mostra dinamicamente o nome da temporada que o usuário escolheu -->
-        <h3 class="text-base font-bold text-slate-900">
-          Excluir a temporada "{{ temporadaParaExcluir()?.Nome }}"?
-        </h3>
-        <!-- Aviso detalhado sobre as dependências e o comportamento em cascata -->
-        <p class="text-xs text-slate-500 leading-relaxed">
-          Essa ação não poderá ser desfeita. <strong class="text-rose-600 font-medium">Todas as oficinas, atividades e presenças</strong> associadas a esta temporada serão permanentemente removidas do sistema.
-        </p>
-      </div>
-
-      <div class="flex items-center gap-3 justify-end text-xs font-semibold">
-        <button 
-          (click)="temporadaParaExcluir.set(null)" 
-          class="px-4 py-2.5 rounded-full text-slate-500 hover:text-slate-800 transition cursor-pointer">
-          Cancelar
-        </button>
-        <button 
-          (click)="executarExclusaoTemporada()" 
-          class="px-5 py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white shadow-sm transition cursor-pointer">
-          Sim, excluir tudo
-        </button>
-      </div>
-
-    </div>
-  </div>
+<!-- Chamada do Modal de Edição no componente Pai -->
+@if (temporadaParaEditar()) {
+  <app-editar-temporada
+    [dadosTemporada]="temporadaParaEditar()"
+    (fechar)="temporadaParaEditar.set(null)"
+    (salvar)="salvarEditarTemporada($event)"
+    (confirmarExclusao)="executarExclusaoTemporada($event)">
+  </app-editar-temporada>
 }
 
 @if (mostrarModalOficina) {
   <app-nova-oficina
-    [temporadaId]="temporada()?.Id"
+    [temporadaId]="temporada()?.id"
       [alunos]="alunos()"
       (fechar)="fecharModalNovaOficina()"
       (salvar)="salvarNovaOficina($event)">

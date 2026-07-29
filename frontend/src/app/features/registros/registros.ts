@@ -9,14 +9,15 @@ import { NovaTemporada } from './componentes/cadastro-temporada/cadastro-tempora
 import { CriarOficina, Oficina } from '../../shared/models/aula-models'
 import { EditarOficina } from './componentes/editar-oficina/editar-oficina'
 import { NovaOficina } from './componentes/nova-oficina/nova-oficina'
-
+import { EditarTemporada } from './componentes/editar-temporada/editar-temporada'
+import { TemporadaMapper } from '../../core/mappers/temporada-mapper'
 
 
 
 @Component({ 
   selector: 'app-registros',
   standalone: true,
-  imports: [CommonModule, RouterModule, NovaTemporada, NovaOficina, EditarOficina],
+  imports: [CommonModule, RouterModule, NovaTemporada, NovaOficina, EditarOficina, EditarTemporada],
   templateUrl: './registros.html'
 })
 export class Registros implements OnInit {
@@ -29,8 +30,10 @@ export class Registros implements OnInit {
   alunos = signal<any[]>([])
   menuAbertoId = signal<number | null>(null)
   temporadaParaExcluir = signal<any | null>(null)
+  temporadaParaEditar = signal<any | null>(null)
   dropdownTemporadaAberto = false
   mostrarModalCriarTemporada = false
+  mostrarModalEditarTemporada = false
   mostrarModalOficina = false
   mostrarModalEditarOficina = false
   oficinaParaEditar = signal<any | null>(null)
@@ -58,11 +61,14 @@ export class Registros implements OnInit {
       return 'Selecione uma temporada'
     }
 
-    return temporada.Nome
+    return temporada.nome
   }
 
   abrirModalCriarTemporada() { this.mostrarModalCriarTemporada = true }
   fecharModalCriarTemporada() { this.mostrarModalCriarTemporada = false }
+
+  abrirModalEditarTemporada() { this.mostrarModalEditarTemporada = true }
+  fecharModalEditarTemporada() { this.mostrarModalEditarTemporada = false }
 
   abrirModalOficina() { this.mostrarModalOficina = true }
   fecharModalNovaOficina() { this.mostrarModalOficina = false }
@@ -88,7 +94,7 @@ export class Registros implements OnInit {
 
   constructor() {
     effect(() => {
-      const tempId = this.temporada()?.Id
+      const tempId = this.temporada()?.id
       if(tempId) {
         this.carregarAulas(tempId)
       }
@@ -109,10 +115,11 @@ export class Registros implements OnInit {
 
   carregarDadosIniciais() {
     this.temporadaService.listarTemporadas().subscribe({
-      next: (temporadas) => {
-        this.listaTemporadas.set(temporadas)
-        if(temporadas.length > 0) {
-          this.temporada.set(temporadas[0])
+      next: (temporadasB: any[]) => {
+        const temporadasMap = temporadasB.map(TemporadaMapper.fromApi)
+        this.listaTemporadas.set(temporadasMap)
+        if(temporadasMap.length > 0) {
+          this.temporada.set(temporadasMap[0])
         }
         this.totalFotografia
         this.totalDesign
@@ -154,6 +161,17 @@ export class Registros implements OnInit {
     })
   }
 
+  salvarEditarTemporada(dados: any) {
+    this.temporadaService.atualizarTemporada(dados.id, dados).subscribe({
+      next: () => {
+        this.carregarDadosIniciais()
+        this.temporadaParaEditar.set(null)
+        this.fecharModalEditarTemporada()
+      },
+      error: (err) => console.error(err)
+    })
+  }
+
   salvarNovaOficina(oficina: CriarOficina) {
     this.aulaService.criarAula(oficina).subscribe({
       next: () => {
@@ -178,7 +196,7 @@ export class Registros implements OnInit {
   }
 
   atualizarTemporada(dados: any) {
-    this.temporadaService.atualizar(dados.id, dados).subscribe({
+    this.temporadaService.atualizarTemporada(dados.id, dados).subscribe({
       next: () => {
         this.carregarDadosIniciais()
         this.fecharModalCriarTemporada()
@@ -194,17 +212,14 @@ export class Registros implements OnInit {
     })
   }
 
-  executarExclusaoTemporada() {
-    const temp = this.temporadaParaExcluir()
-    if (temp) {
-      this.temporadaService.excluirTemporada(temp.Id).subscribe({
-        next: () => {
-          this.temporadaParaExcluir.set(null) // Fecha o modal de confirmação
-          this.carregarDadosIniciais()        // Atualiza a listagem
-        },
-        error: (err) => console.error("Erro ao excluir temporada:", err)
-      })
-    }
+  executarExclusaoTemporada(id: number) {
+    this.temporadaService.excluirTemporada(id).subscribe({
+      next: () => {
+        this.temporadaParaEditar.set(null) // Garante o fechamento total do modal
+        this.carregarDadosIniciais()      // Recarrega a listagem atualizada
+      },
+      error: (err) => console.error("Erro ao excluir temporada:", err)
+    })
   }
 
 
