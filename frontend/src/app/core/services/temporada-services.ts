@@ -20,7 +20,7 @@ export class temporadaService {
         return this.http.get<any>(`${this.apiUrl}/${id}`)
     }
 
-    atualizar(id: number, temporada: any) {
+    atualizarTemporada(id: number, temporada: any) {
         return this.http.put(`${this.apiUrl}/${id}`, temporada)
     }
 
