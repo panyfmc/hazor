@@ -2,6 +2,9 @@ import { Component, Input, Output, EventEmitter, inject, signal, computed, OnIni
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { AlunoService } from '../../../../core/services/aluno-service'
+import { DepartamentoService } from '../../../../core/services/departamento-service'
+import { DepartamentoMapper } from '../../../../core/mappers/departamento-mapper'
+import { Departamento } from '../../../../shared/models/departamento-models'
 
 export interface EditarOficinaForm {
   id: number
@@ -17,9 +20,22 @@ export interface EditarOficinaForm {
   templateUrl: './editar-oficina.html'
 })
 export class EditarOficina implements OnInit {
-
   private alunoService = inject(AlunoService)
-
+  private departamentoService = inject(DepartamentoService)
+  departamentos: Departamento[] = []
+  alunos: any[] = []
+  selecionados: number[] = []
+  pesquisa = signal('')
+  dropdownDepartamentoAberto = false
+  dropdownSeletorAberto = false
+  salvando = false
+  @Output() fechar = new EventEmitter<void>()
+  @Output() salvar = new EventEmitter<any>()
+  
+  ngOnInit() {
+    this.carregarAlunos()
+  }
+  
   @Input() set oficina(dados: any) {
     if (!dados) return
 
@@ -36,9 +52,6 @@ export class EditarOficina implements OnInit {
     }
   }
 
-  @Output() fechar = new EventEmitter<void>()
-  @Output() salvar = new EventEmitter<any>()
-
   formulario: EditarOficinaForm = {
     id: 0,
     dataAula: '',
@@ -46,25 +59,12 @@ export class EditarOficina implements OnInit {
     teveAtividade: true
   }
 
-  departamentos = [
-    { id: 1, nome: 'Fotografia' },
-    { id: 2, nome: 'Produção' },
-    { id: 3, nome: 'Design' }
-  ]
-
-  alunos: any[] = []
-  selecionados: number[] = []
-
-  pesquisa = signal('')
-
-  dropdownDepartamentoAberto = false
-  dropdownSeletorAberto = false
-
-  salvando = false
-
-  ngOnInit() {
-    this.carregarAlunos()
+  carregarDepartamentos() {
+    this.departamentoService.listar().subscribe(departamentos => {
+      this.departamentos = departamentos.map(DepartamentoMapper.fromApi)
+    })
   }
+
 
   carregarAlunos() {
     this.alunoService.listar().subscribe({

@@ -5,6 +5,7 @@ import { CriarOficina, FormularioOficina } from '../../../../shared/models/aula-
 import { DepartamentoService } from '../../../../core/services/departamento-service'
 import { DepartamentoMapper } from '../../../../core/mappers/departamento-mapper'
 import { Departamento } from '../../../../shared/models/departamento-models'
+import { OficinaMapper } from '../../../../core/mappers/oficina-mapper'
 
 
 @Component({
@@ -20,7 +21,7 @@ import { Departamento } from '../../../../shared/models/departamento-models'
 export class NovaOficina implements OnInit {
   @Input({ required: true }) temporadaId!: number
   @Output() fechar = new EventEmitter<void>()
-  @Output() salvar = new EventEmitter<CriarOficina>()
+  @Output() salvar = new EventEmitter<any>()
   private departamentoService = inject(DepartamentoService)
   departamentos: Departamento[] = []
 
@@ -146,8 +147,9 @@ export class NovaOficina implements OnInit {
       presentes: this.formulario.presentes,
       teveAtividade: this.formulario.teveAtividade
     }
-    console.log(oficina)
+    const payload = OficinaMapper.toCriarApi(oficina)
+    console.log(payload)
 
-    this.salvar.emit(oficina)
+    this.salvar.emit(payload)
   }
 }
