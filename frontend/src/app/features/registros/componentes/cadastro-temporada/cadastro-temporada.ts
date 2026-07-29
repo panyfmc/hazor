@@ -1,12 +1,7 @@
 import { Component, EventEmitter, Output, OnInit, inject, HostListener, ElementRef } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
-
-export interface CriarTemporada {
-  nome: string
-  dataInicio: string
-}
-
+import { CriarTemporada } from '../../../../shared/models/temporada-models'
 @Component({
   selector: 'app-cadastro-temporada',
   standalone: true,
@@ -31,7 +26,6 @@ export class NovaTemporada implements OnInit {
     @HostListener('document:click', ['$event'])
     cliqueFora(event: Event) {
         const alvo = event.target as HTMLElement
-
         if (alvo.closest('button[type="submit"]') || alvo.closest('.fechar-modal-btn')) {
             return
         }
@@ -53,14 +47,10 @@ export class NovaTemporada implements OnInit {
     }
 
     onSubmit() {
-
         const temporada: CriarTemporada = {
-
-        nome: this.formulario.nome,
-        dataInicio: this.formulario.dataInicio
-
+            nome: this.formulario.nome,
+            dataInicio: this.formulario.dataInicio
         }
-
         this.salvar.emit(temporada)
         this.fecharModal()
     }
