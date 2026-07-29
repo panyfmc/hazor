@@ -5,11 +5,11 @@ import { HttpClient, HttpParams } from '@angular/common/http'
     providedIn: 'root'
 })
 
-export class AulaService {
+export class OficinaService {
     private http = inject(HttpClient)
-    private apiUrl =  'http://localhost:3000/aulas'
+    private apiUrl =  'http://localhost:3000/oficinas'
 
-    listarAulas(temporadaId?: number) {
+    listarOficinas(temporadaId?: number) {
         let params = new HttpParams()
         if(temporadaId) {
             params = params.set('temporadaId', temporadaId.toString())
@@ -17,7 +17,7 @@ export class AulaService {
         return this.http.get<any[]>(this.apiUrl, {params })
     }
 
-    criarAula(aula: any) {
+    criarOficina(aula: any) {
         return this.http.post(this.apiUrl, aula) 
     }
 

@@ -1,4 +1,4 @@
-const oficinaRepository = require('../repositories/aula-repository')
+const oficinaRepository = require('../repositories/oficina-repository')
 const presencaRepository = require('../repositories/presenca-repository')
 const atividadeRepository = require('../repositories/atividade-repository')
 const entregaRepository = require('../repositories/entrega-repository')
@@ -18,26 +18,34 @@ async function buscarPorId(id) {
 }
 
 async function criar(dados) {
+    // 🌟 CORREÇÃO: Pegando TemporadaId de dentro do objeto 'dados'
     const oficina = await oficinaRepository.criar({
-        temporadaId: temporada.Id,
-        departamentoId: dados.departamentoId,
-        dataAula: dados.dataAula,
-        teveAtividade: dados.teveAtividade
+        temporadaId: dados.TemporadaId || dados.temporadaId, 
+        departamentoId: dados.DepartamentoId || dados.departamentoId,
+        dataAula: dados.DataAula || dados.dataAula,
+        teveAtividade: dados.TeveAtividade !== undefined ? dados.TeveAtividade : dados.teveAtividade
     })
 
-    if (dados.presentes?.length > 0) {
-        for (const alunoId of dados.presentes) {
+    // Garante a leitura de 'Presentes' maiúsculo ou minúsculo
+    const listaPresentes = dados.Presentes || dados.presentes
+
+    if (listaPresentes?.length > 0) {
+        for (const alunoId of listaPresentes) {
             await presencaRepository.criar({
-                oficinaId: oficina.Id,
+                oficinaId: oficina.Id || oficina.id,
                 alunoId
             })
         }
     }
-    if (dados.teveAtividade) {
-        await atividadeRepository.criar(oficina.Id)
+    
+    // Garante a leitura de 'TeveAtividade'
+    const teveAtiv = dados.TeveAtividade !== undefined ? dados.TeveAtividade : dados.teveAtividade
+    if (teveAtiv) {
+        await atividadeRepository.criar(oficina.Id || oficina.id)
     }
     return oficina
 }
+
 
 async function atualizar(id, dados) {
     const oficinaAtual = await oficinaRepository.buscarPorId(id)

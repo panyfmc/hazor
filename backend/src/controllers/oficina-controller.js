@@ -1,4 +1,4 @@
-const aulaService = require('../services/aula-service')
+const aulaService = require('../services/oficina-service')
 
 async function listar(req, res) {
     try {

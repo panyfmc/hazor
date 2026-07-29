@@ -5,14 +5,14 @@ const reativarRepository = require('../repositories/reativar-aluno-repository')
 const alunoGrupoRepository = require('../repositories/aluno-grupo-repository')
 const presencaRepository = require('../repositories/presenca-repository')
 const entregaRepository = require('../repositories/entrega-repository')
-const aulaRepository = require('../repositories/aula-repository')
+const oficinaRepository = require('../repositories/oficina-repository')
 const atividadeRepository = require('../repositories/atividade-repository')
 const gp_oficina = 1
 
 async function listar() {
     const alunos = await alunoRepository.listar()
 
-    const totalAulas = await aulaRepository.contar()
+    const totalAulas = await oficinaRepository.contar()
     const totalAtividades = await atividadeRepository.contar()
 
     const presencas = await presencaRepository.contarPorAluno()
