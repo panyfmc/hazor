@@ -38,7 +38,6 @@ export class Registros implements OnInit {
   mostrarModalOficina = false
   mostrarModalEditarOficina = false
   oficinaParaEditar = signal<any | null>(null)
-  aulasPorDepartamento: Oficina[] = []
   @Output() fechar = new EventEmitter<void>() 
 
   ngOnInit() {
@@ -73,12 +72,6 @@ export class Registros implements OnInit {
 
   abrirModalOficina() { this.mostrarModalOficina = true }
   fecharModalNovaOficina() { this.mostrarModalOficina = false }
-
-  // abrirModalEditarOficina(oficina: any) {
-  //   this.oficinaParaEditar.set(oficina)
-  //   console.log(oficina)
-  //   this.mostrarModalEditarOficina = true
-  // }
 
   abrirModalEditarOficina(oficina: any) {
     this.mostrarModalEditarOficina = true
