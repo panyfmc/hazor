@@ -74,10 +74,30 @@ export class Registros implements OnInit {
   abrirModalOficina() { this.mostrarModalOficina = true }
   fecharModalNovaOficina() { this.mostrarModalOficina = false }
 
+  // abrirModalEditarOficina(oficina: any) {
+  //   this.oficinaParaEditar.set(oficina)
+  //   console.log(oficina)
+  //   this.mostrarModalEditarOficina = true
+  // }
+
   abrirModalEditarOficina(oficina: any) {
-    this.oficinaParaEditar.set(oficina)
-    console.log(oficina)
     this.mostrarModalEditarOficina = true
+    this.oficinaService.buscarPorId(oficina.id).subscribe({
+      next: (oficinaCompleta) => {
+        // 2. Normaliza as propriedades se o backend mandar com iniciais maiúsculas
+        const dadosNormalizados = {
+          id: oficinaCompleta.Id || oficinaCompleta.id,
+          temporadaId: oficinaCompleta.TemporadaId || oficinaCompleta.temporadaId,
+          departamentoId: oficinaCompleta.DepartamentoId || oficinaCompleta.departamentoId,
+          dataAula: oficinaCompleta.DataAula || oficinaCompleta.dataAula,
+          teveAtividade: oficinaCompleta.TeveAtividade ?? oficinaCompleta.teveAtividade,
+          presentes: oficinaCompleta.presentes || []
+        }
+
+        this.oficinaParaEditar.set(dadosNormalizados) 
+      },
+      error: (err) => console.error('Erro ao buscar detalhes da oficina:', err)
+    })
   }
 
   fecharModalEditarOficina() {
@@ -197,22 +217,13 @@ export class Registros implements OnInit {
     })
   }
 
-  
-
-  atualizarTemporada(dados: any) {
-    this.temporadaService.atualizarTemporada(dados.id, dados).subscribe({
+  executarExclusaoOficina(id: number) {
+    this.oficinaService.excluir(id).subscribe({
       next: () => {
+        this.oficinaParaEditar.set(null)
         this.carregarDadosIniciais()
-        this.fecharModalCriarTemporada()
-      }
-    })
-  }
-
-  excluirTemporada(id: number) {
-    this.temporadaService.excluirTemporada(id).subscribe({
-      next: () => {
-        this.carregarDadosIniciais()
-      }
+      },
+      error: (err) => console.error("Erro ao excluir oficina", err)
     })
   }
 
@@ -239,6 +250,4 @@ export class Registros implements OnInit {
   fecharModal() {
     this.fechar.emit()
   }
-  // this.salvar.emit(NovaTemporada)
-  // this.fecharModal()
 }
