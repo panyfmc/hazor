@@ -22,33 +22,33 @@ async function buscarPorId(id) {
 
 async function criar(presenca) {
 
-    const request = new sql.Request();
+    const request = new sql.Request()
 
     request
         .input('oficinaId', sql.Int, presenca.oficinaId)
-        .input('alunoId', sql.Int, presenca.alunoId);
+        .input('alunoId', sql.Int, presenca.alunoId)
 
     const existe = await request.query(`
         SELECT Id, DeletedAt
         FROM Presencas
         WHERE OficinaId = @oficinaId
           AND AlunoId = @alunoId
-    `);
+    `)
 
     if (existe.recordset.length > 0) {
 
         if (existe.recordset[0].DeletedAt !== null) {
 
-            request.input('id', sql.Int, existe.recordset[0].Id);
+            request.input('id', sql.Int, existe.recordset[0].Id)
 
             await request.query(`
                 UPDATE Presencas
                 SET DeletedAt = NULL
                 WHERE Id = @id
-            `);
+            `)
         }
 
-        return existe.recordset[0];
+        return existe.recordset[0]
     }
 
     const result = await request.query(`
@@ -63,9 +63,9 @@ async function criar(presenca) {
             @oficinaId,
             @alunoId
         )
-    `);
+    `)
 
-    return result.recordset[0];
+    return result.recordset[0]
 }
 
 async function listarPorOficina(oficinaId) {
