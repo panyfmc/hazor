@@ -1,17 +1,13 @@
-import { Component, Input, Output, EventEmitter, inject, signal, computed, OnInit } from '@angular/core'
+import { Component, inject, EventEmitter, Output, Input, OnInit, HostListener, ElementRef, signal, computed } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { AlunoService } from '../../../../core/services/aluno-service'
 import { DepartamentoService } from '../../../../core/services/departamento-service'
 import { DepartamentoMapper } from '../../../../core/mappers/departamento-mapper'
+import { OficinaMapper } from '../../../../core/mappers/oficina-mapper'
 import { Departamento } from '../../../../shared/models/departamento-models'
-
-export interface EditarOficinaForm {
-  id: number
-  dataAula: string
-  departamentoId: number | null
-  teveAtividade: boolean
-}
+import { FormularioOficina } from '../../../../shared/models/oficina-models'
+import { AlunoMapper } from '../../../../core/mappers/aluno-mapper'
 
 @Component({
   selector: 'app-editar-oficina',
@@ -20,74 +16,108 @@ export interface EditarOficinaForm {
   templateUrl: './editar-oficina.html'
 })
 export class EditarOficina implements OnInit {
+  private elementRef = inject(ElementRef)
   private alunoService = inject(AlunoService)
   private departamentoService = inject(DepartamentoService)
-  departamentos: Departamento[] = []
-  alunos: any[] = []
-  selecionados: number[] = []
+
+  @Output() fechar = new EventEmitter<void>()
+  @Output() salvar = new EventEmitter<any>()
+  @Output() confirmarExclusaoOficina = new EventEmitter<number>()
+
+  // 🌟 MODIFICADO: Transformados em Signals para garantir reatividade instantânea
+  departamentos = signal<Departamento[]>([])
+  alunos = signal<any[]>([])
+  carregandoAlunos = signal(true)
+  selecionados = signal<number[]>([])
   pesquisa = signal('')
   dropdownDepartamentoAberto = false
   dropdownSeletorAberto = false
   salvando = false
-  @Output() fechar = new EventEmitter<void>()
-  @Output() salvar = new EventEmitter<any>()
-  
-  ngOnInit() {
-    this.carregarAlunos()
-  }
-  
-  @Input() set oficina(dados: any) {
-    if (!dados) return
+  mostrarConfirmacaoExcluir = signal<boolean>(false)
 
-    this.formulario = {
-      id: dados.Id || 0,
-      dataAula: dados.DataAula ? dados.DataAula.substring(0, 10) : '',
-      departamentoId: dados.DepartamentoId || null,
-      teveAtividade: dados.TeveAtividade ?? true
-    }
+  idOficina = 0
 
-    // Carrega alunos já presentes
-    if (dados.presentes?.length) {
-      this.selecionados = dados.presentes.map((p: any) => p.AlunoId)
-    }
-  }
-
-  formulario: EditarOficinaForm = {
-    id: 0,
+  formulario: FormularioOficina = {
     dataAula: '',
     departamentoId: null,
+    presentes: [],
     teveAtividade: true
   }
 
-  carregarDepartamentos() {
-    this.departamentoService.listar().subscribe(departamentos => {
-      this.departamentos = departamentos.map(DepartamentoMapper.fromApi)
-    })
+  ngOnInit(): void {
+    this.carregarAlunos()
+    this.carregarDepartamentos()
   }
 
+  @Input() set oficina(dados: any | null | undefined) {
+    if (!dados) return
+
+    this.idOficina = dados.id || 0
+
+    this.formulario = {
+      dataAula: dados.dataAula ? dados.dataAula.substring(0, 10) : '',
+      departamentoId: dados.departamentoId || null,
+      teveAtividade: dados.teveAtividade ?? true,
+      presentes: []
+    }
+
+    // Vincula os alunos presentes
+    if (dados.presentes?.length) {
+      // Mapeia suportando tanto objetos com AlunoId/alunoId quanto número puro
+      const idsPresentes = dados.presentes.map((p: any) => p.alunoId || p.AlunoId || p)
+      this.selecionados.set(idsPresentes)
+      this.formulario.presentes = idsPresentes
+    } else {
+      this.selecionados.set([])
+      this.formulario.presentes = []
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  cliqueFora(event: Event) {
+    const alvo = event.target as HTMLElement
+    if (alvo.closest('button') || alvo.closest('.fechar-modal-btn') || alvo.closest('form') || alvo.closest('.dropdown-content')) {
+      return
+    }
+    const clicouForaDoModal = !this.elementRef.nativeElement.contains(alvo)
+    if (clicouForaDoModal && !this.mostrarConfirmacaoExcluir()) {
+      this.fecharModal()
+    }
+  }
+
+  // ==================== Carregamento de Dados ====================
+  carregarDepartamentos() {
+    this.departamentoService.listar().subscribe(deps => {
+      // 🌟 MODIFICADO: Atualiza usando o .set() do Signal
+      this.departamentos.set(deps.map(DepartamentoMapper.fromApi))
+      
+      // Acorda o formulário recriando a referência caso o ID já estivesse setado
+      if (this.formulario.departamentoId) {
+        this.formulario = { ...this.formulario }
+      }
+    })
+  }
 
   carregarAlunos() {
+    this.carregandoAlunos.set(true)
     this.alunoService.listar().subscribe({
-      next: (res) => {
-        this.alunos = res.map((a: any) => ({
-          id: a.Id,
-          nomeCompleto: a.NomeCompleto
-        }))
+      next: (dados: any[]) => {
+        const mapeado = dados.map(AlunoMapper.fromApi)
+        this.alunos.set(mapeado) 
+        this.carregandoAlunos.set(false)
       },
-      error: (err) => console.error('Erro ao carregar alunos:', err)
+      error: (erro) => console.error(erro)
     })
   }
 
-  // Computed para filtro
+  // ==================== Filtros e Computeds ====================
+  // 🌟 MODIFICADO: Agora o computed rastreia tanto o Signal da pesquisa quanto o Signal de alunos
   alunosFiltrados = computed(() => {
+    const listaAlunos = this.alunos()
     const termo = this.pesquisa().toLowerCase().trim()
-    if (!termo) return this.alunos
-    return this.alunos.filter(a => a.nomeCompleto.toLowerCase().includes(termo))
+    if (!termo) return listaAlunos
+    return listaAlunos.filter(a => a.nomeCompleto.toLowerCase().includes(termo))
   })
-
-  trackById(index: number, aluno: any): number {
-    return aluno.id
-  }
 
   // ==================== Dropdown Departamento ====================
   toggleDropdownDepartamento() {
@@ -99,8 +129,9 @@ export class EditarOficina implements OnInit {
     this.dropdownDepartamentoAberto = false
   }
 
-  getDepartamentoSelecionadaNome(): string {
-    return this.departamentos.find(d => d.id === this.formulario.departamentoId)?.nome ?? 'Selecione'
+  getDepartamentoSelecionado(): string {
+    // 🌟 MODIFICADO: Lendo a lista de departamentos como função: this.departamentos()
+    return this.departamentos().find(d => d.id === this.formulario.departamentoId)?.nome ?? 'Selecione'
   }
 
   // ==================== Seleção de Alunos ====================
@@ -109,46 +140,66 @@ export class EditarOficina implements OnInit {
   }
 
   toggleAluno(id: number) {
-    if (this.selecionados.includes(id)) {
-      this.selecionados = this.selecionados.filter(x => x !== id)
+    const atuais = this.selecionados()
+    if (atuais.includes(id)) {
+      this.selecionados.set(atuais.filter(x => x !== id))
     } else {
-      this.selecionados = [...this.selecionados, id]
+      this.selecionados.set([...atuais, id])
     }
+    this.formulario.presentes = this.selecionados()
   }
 
   alunoSelecionado(id: number): boolean {
-    return this.selecionados.includes(id)
+    return this.selecionados().includes(id)
   }
 
   selecionarTodos() {
-    this.selecionados = this.alunos.map(a => a.id)
+    // 🌟 MODIFICADO: Acessa os alunos com a função this.alunos()
+    const todosIds = this.alunos().map(a => a.id)
+    this.selecionados.set(todosIds)
+    this.formulario.presentes = todosIds
   }
 
   removerTodos() {
-    this.selecionados = []
+    this.selecionados.set([])
+    this.formulario.presentes = []
   }
 
-  // ==================== Submit ====================
+  // ==================== Controle de Modais e Submissão ====================
+  fecharModal() {
+    this.fechar.emit()
+    this.salvando = false
+  }
+
   onSubmit() {
-    if (this.salvando) return
+    if (this.salvando || this.formulario.departamentoId === null) return
 
     this.salvando = true
 
-    const dados = {
-      id: this.formulario.id,
+    const dadosForm = {
       departamentoId: this.formulario.departamentoId,
       dataAula: this.formulario.dataAula,
       teveAtividade: this.formulario.teveAtividade,
-      presentes: [...this.selecionados]        // Nome esperado pelo backend
+      presentes: this.selecionados()
     }
 
-    console.log('📤 ENVIANDO:', dados)
-    this.salvar.emit(dados)
+    const payload = OficinaMapper.toAtualizarApi(dadosForm)
+    
+    this.salvar.emit({ id: this.idOficina, ...payload })
     this.fecharModal()
   }
 
-  fecharModal() {
-    console.log("fewcha m")
-    this.fechar.emit()
+  abrirConfirmacaoExclusao() {
+    this.mostrarConfirmacaoExcluir.set(true)
+  }
+
+  fecharConfirmacaoExclusao() {
+    this.mostrarConfirmacaoExcluir.set(false)
+  }
+
+  executarExclusaoCompleta() {
+    this.confirmarExclusaoOficina.emit(this.idOficina)
+    this.fecharConfirmacaoExclusao()
+    this.fecharModal()
   }
 }
