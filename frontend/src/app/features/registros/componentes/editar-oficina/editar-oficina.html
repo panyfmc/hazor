@@ -1,22 +1,22 @@
 <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
-  <!-- Backdrop -->
+  <!-- Backdrop Principal -->
   <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm" (click)="fecharModal()"></div>
 
-  <!-- Modal Container: cresce com o painel de Presenças; scroll se a viewport for baixa -->
+  <!-- Modal Container Principal (Oficina) -->
   <div class="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl border border-slate-100 bg-white p-6 shadow-2xl transition-all duration-300">
     
     <!-- Header -->
     <div class="mb-6 flex items-center justify-between">
       <h3 class="text-xl font-bold text-slate-900">Editar Oficina</h3>
-      <button (click)="fecharModal()" class="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 cursor-pointer transition-colors">
+      <button (click)="fecharModal()" class="fechar-modal-btn rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 cursor-pointer transition-colors">
         <i class="pi pi-times"></i>
       </button>
     </div>
 
-    <!-- Form -->
-    <form (ngSubmit)="onSubmit()" #aulaForm="ngForm" class="space-y-4">
+    <!-- Form Principal -->
+    <form (ngSubmit)="onSubmit()" #aulaForm="ngForm" class="space-y-5">
 
-      <!-- Grid de Inputs do Topo (Consertado o alinhamento e as alturas de forma idêntica) -->
+      <!-- Grid de Inputs do Topo (Data e Departamento) -->
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="mb-1 block text-sm font-medium text-slate-700">Data da Oficina</label>
@@ -36,11 +36,11 @@
             </button>
 
             @if (dropdownDepartamentoAberto) {
-              <div class="absolute z-50 mt-1 max-h-48 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white p-1 shadow-lg animate-fadeIn">
+              <div class="dropdown-content absolute z-50 mt-1 max-h-48 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white p-1 shadow-lg animate-fadeIn">
                 <button type="button" (click)="selecionarDepartamento(null)" class="w-full text-left rounded-lg px-3 py-2 text-sm text-gray-500 hover:bg-slate-100">
                   Selecione
                 </button>
-                @for(departamento of departamentos; track departamento.id){
+                @for(departamento of departamentos(); track departamento.id){
                   <button type="button" (click)="selecionarDepartamento(departamento.id)"
                     class="w-full text-left rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                     [class.bg-blue-50]="formulario.departamentoId === departamento.id"
@@ -56,40 +56,28 @@
 
       <!-- PRESENÇAS -->
       <div>
-        <label class="mb-1 block text-sm font-medium text-slate-700">
-          Presenças
-        </label>
-
+        <label class="mb-1 block text-sm font-medium text-slate-700">Presenças</label>
         <div class="relative w-full">
           <button
             type="button"
             (click)="toggleDropDownSeletor()"
             class="flex w-full cursor-pointer items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all">
-
+            
             <span class="text-slate-700 truncate">
-              @if(selecionados.length === 0) {
+              @if(selecionados().length === 0) {
                 Selecionar alunos presentes
               } @else {
-                {{ selecionados.length }} aluno(s) presente(s)
+                {{ selecionados().length }} de {{ alunos().length }} alunos marcados como presentes.
               }
             </span>
 
-            <svg
-              class="h-4 w-4 text-gray-500 transition-transform shrink-0"
-              [class.rotate-180]="dropdownSeletorAberto"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor">
+            <svg class="h-4 w-4 text-gray-500 transition-transform shrink-0" [class.rotate-180]="dropdownSeletorAberto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
             </svg>
           </button>
-
+          
           @if (dropdownSeletorAberto) {
-            <!-- In-flow: a modal cresce ao abrir; a lista interna mantém scroll -->
-            <div class="mt-1 flex h-56 w-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl animate-fadeIn">
-
+            <div class="dropdown-content mt-1 flex h-56 w-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl animate-fadeIn">
               <!-- Pesquisa -->
               <div class="shrink-0 border-b border-slate-100 bg-white p-2">
                 <input
@@ -103,22 +91,17 @@
 
               <!-- Ações -->
               <div class="flex gap-2 border-b border-slate-100 bg-white px-3 py-1.5 shrink-0">
-                <button
-                  type="button"
-                  (click)="selecionarTodos()"
+                <button type="button" (click)="selecionarTodos()"
                   class="cursor-pointer rounded-md border border-blue-200 bg-blue-50/50 px-2.5 py-1 text-xs font-semibold text-blue-600 transition hover:bg-blue-500 hover:text-white">
                   Todos
                 </button>
-
-                <button
-                  type="button"
-                  (click)="removerTodos()"
+                <button type="button" (click)="removerTodos()"
                   class="cursor-pointer rounded-md border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-500 transition hover:bg-slate-100">
                   Limpar
                 </button>
               </div>
-
-              <!-- Lista (Apenas esta área rola internamente) -->
+              
+              <!-- Lista -->
               <div class="min-h-0 flex-1 overflow-y-auto bg-white p-1 overscroll-contain">
                 @for(aluno of alunosFiltrados(); track aluno.id){
                   <button
@@ -147,27 +130,70 @@
           }
         </div>
       </div>
-
-      <!-- Resumo de Seleção -->
-      @if (selecionados.length > 0) {
-        <p class="mt-1 text-xs text-slate-500">
-          {{ selecionados.length }} de {{ alunos.length }} alunos marcados como presentes.
-        </p>
-      }
-
-      <!-- Footer de Botões (Sem a linha divisória e com margem respirável) -->
-      <div class="mt-8 flex justify-end gap-3">
-        <button type="button" (click)="fecharModal()"
-          class="cursor-pointer rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
-          Cancelar
-        </button>
-
-        <button type="submit" [disabled]="!aulaForm.form.valid" (click)="$event.stopPropagation()"
-          class="cursor-pointer rounded-xl bg-blue-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50 transition-all">
-          Salvar Alterações
-        </button>
+      
+      <!-- Campo Teve Atividade (Toggle Switch Moderno) -->
+      <div class="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50/50 p-3">
+        <div class="flex flex-col">
+          <label class="text-sm font-semibold text-slate-700">Teve Atividade Prática?</label>
+          <span class="text-xs text-slate-400">Ative se os alunos executaram alguma atividade pontuada na aula.</span>
+        </div>
+        <label class="relative inline-flex cursor-pointer items-center">
+          <input type="checkbox" name="teveAtividade" [(ngModel)]="formulario.teveAtividade" class="peer sr-only">
+          <div class="peer h-6 w-11 rounded-full bg-slate-200 transition-colors after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-500 peer-checked:after:translate-x-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-100"></div>
+        </label>
       </div>
 
-    </form> 
+      <!-- Footer de Botões -->
+      <div class="mt-8 flex items-center justify-between">
+        <!-- Botão de Excluir Oficina (Alinhado à esquerda) -->
+        <button type="button" (click)="abrirConfirmacaoExclusao()"
+          class="cursor-pointer flex items-center gap-1.5 rounded-xl border border-red-100 bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-600 hover:text-white">
+          <i class="pi pi-trash text-xs"></i>
+          Excluir Aula
+        </button>
+
+        <div class="flex gap-3">
+          <button type="button" (click)="fecharModal()"
+            class="cursor-pointer rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
+            Cancelar
+          </button>
+
+          <button type="submit" [disabled]="!aulaForm.form.valid || formulario.departamentoId === null"
+            class="cursor-pointer rounded-xl bg-blue-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50 transition-all">
+            Salvar Alterações
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
+
+  <!-- 🌟 SEGUNDA CAMADA (SOBREPOSTA): Pop-up de Confirmação de Exclusão -->
+  @if (mostrarConfirmacaoExcluir()) {
+    <div class="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-fadeIn">
+      <!-- Backdrop escuro exclusivo do Pop-up -->
+      <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs" (click)="fecharConfirmacaoExclusao()"></div>
+      
+      <!-- Caixa do Pop-up Centralizado -->
+      <div class="relative w-full max-w-sm rounded-2xl border border-slate-100 bg-white p-6 shadow-2xl text-center">
+        <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600">
+          <i class="pi pi-exclamation-triangle text-xl"></i>
+        </div>
+        <h4 class="text-lg font-bold text-slate-900">Excluir esta Oficina?</h4>
+        <p class="mt-2 text-sm text-slate-500 px-2">
+          Esta ação não pode ser desfeita. Todo o histórico de chamada desta data e as atividades associadas serão apagados definitivamente.
+        </p>
+
+        <div class="mt-6 flex justify-center gap-3">
+          <button type="button" (click)="fecharConfirmacaoExclusao()"
+            class="cursor-pointer rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 transition">
+            Voltar
+          </button>
+          <button type="button" (click)="executarExclusaoCompleta()"
+            class="cursor-pointer rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 transition">
+            Confirmar e Excluir
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 </div>
