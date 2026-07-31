@@ -196,8 +196,16 @@ export class HistoricoCompleto implements OnInit {
         this.filtroData.set(valor)
         this.paginaAtual.set(1) 
     }
-
-    @HostListener('document:click')
+    
+    @HostListener('document:click', ['$event'])
+    cliqueFora(event: Event) {
+      const alvo = event.target as HTMLElement
+      if(alvo.closest('.dropdown-temporada')) {
+        return
+      }
+      this.dropdownTemporadaAberto = false
+    }
+    
     fecharMenus() {
         this.menuAbertoId.set(null)
     }

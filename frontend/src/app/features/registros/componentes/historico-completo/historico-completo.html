@@ -6,10 +6,10 @@
                 Voltar
             </button>
 
-            <div class="relative flex items-center gap-1.5 text-xs font-medium text-slate-500">
+            <div class="relative flex items-center dropdown-temporada gap-1.5 text-xs font-medium text-slate-500">
                 <button
                     (click)="toggleDropdownTemporada()"
-                    class="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 shadow-sm hover:border-slate-300 transition">
+                    class="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 shadow-sm hover:border-slate-300 transition cursor-pointer">
 
                     <i class="pi pi-face-smile text-slate-400"></i>
 
@@ -18,7 +18,7 @@
                     </span>
 
                     <i
-                    class="pi pi-chevron-down text-sm transition-transform cursor-pointer"
+                    class="pi pi-chevron-down text-sm transition-transform"
                     [class.rotate-180]="dropdownTemporadaAberto">
                     </i>
                 </button>
