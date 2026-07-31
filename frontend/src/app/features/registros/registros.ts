@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router'
 import { AlunoService } from '../../core/services/aluno-service'
 import { AlunoMapper } from '../../core/mappers/aluno-mapper'
 import { NovaTemporada } from './componentes/cadastro-temporada/cadastro-temporada'
-import { CriarOficina, Oficina } from '../../shared/models/aula-models'
+import { CriarOficina, Oficina } from '../../shared/models/oficina-models'
 import { EditarOficina } from './componentes/editar-oficina/editar-oficina'
 import { NovaOficina } from './componentes/nova-oficina/nova-oficina'
 import { EditarTemporada } from './componentes/editar-temporada/editar-temporada'
@@ -196,6 +196,8 @@ export class Registros implements OnInit {
       error: (err) => console.error('Erro ao salvar:', err)
     })
   }
+
+  
 
   atualizarTemporada(dados: any) {
     this.temporadaService.atualizarTemporada(dados.id, dados).subscribe({
