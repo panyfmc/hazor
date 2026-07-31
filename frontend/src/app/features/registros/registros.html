@@ -391,7 +391,8 @@
   <app-editar-oficina 
     [oficina]="oficinaParaEditar()"
     (fechar)="fecharModalEditarOficina()"
-    (salvar)="salvarEditarOficina($event)">
+    (salvar)="salvarEditarOficina($event)"
+    (confirmarExclusaoOficina)="executarExclusaoOficina($event)">
   </app-editar-oficina>
 }
 
