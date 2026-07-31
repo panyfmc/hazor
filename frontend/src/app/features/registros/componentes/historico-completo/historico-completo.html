@@ -6,14 +6,14 @@
                 Voltar
             </button>
 
-            <div class="relative flex items-center dropdown-temporada gap-1.5 text-xs font-medium text-slate-500">
+            <div class="relative flex items-center dropdown-temporada gap-1.5 text-sm font-medium text-slate-500">
                 <button
                     (click)="toggleDropdownTemporada()"
                     class="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 shadow-sm hover:border-slate-300 transition cursor-pointer">
 
                     <i class="pi pi-face-smile text-slate-400"></i>
 
-                    <span class="text-xs font-semibold text-slate-700">
+                    <span class="text-sm font-semibold text-slate-700">
                     {{ temporada()?.nome ?? 'Nenhuma temporada encontrada' }}
                     </span>
 
