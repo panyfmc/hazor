@@ -46,28 +46,34 @@ async function criar(dados) {
     return oficina
 }
 
-
 async function atualizar(id, dados) {
     const oficinaAtual = await oficinaRepository.buscarPorId(id)
     if (!oficinaAtual) {
         throw new Error('Oficina não encontrada')
     }
 
+    const deptoId = dados.DepartamentoId !== undefined ? dados.DepartamentoId : dados.departamentoId
+    const dtAula = dados.DataAula !== undefined ? dados.DataAula : dados.dataAula
+    const tAtividade = dados.TeveAtividade !== undefined ? dados.TeveAtividade : dados.teveAtividade
+    const listaPresentes = dados.Presentes || dados.presentes
+
     await oficinaRepository.atualizar(id, {
-        departamentoId: dados.departamentoId ?? oficinaAtual.DepartamentoId,
-        dataAula: dados.dataAula ?? oficinaAtual.DataAula,
-        teveAtividade: dados.teveAtividade ?? oficinaAtual.TeveAtividade
+        departamentoId: deptoId ?? oficinaAtual.DepartamentoId,
+        dataAula: dtAula ?? oficinaAtual.DataAula,
+        teveAtividade: tAtividade ?? oficinaAtual.TeveAtividade
     })
 
-    if (dados.presentes) {
+    // Atualiza as presenças se a lista foi enviada
+    if (listaPresentes) {
         await presencaRepository.excluirPorOficina(id)
-        for (const alunoId of dados.presentes) {
+        for (const alunoId of listaPresentes) {
             await presencaRepository.criar({
                 oficinaId: id,
                 alunoId
             })
         }
     }
+    
     return await oficinaRepository.buscarPorId(id)
 }
 
