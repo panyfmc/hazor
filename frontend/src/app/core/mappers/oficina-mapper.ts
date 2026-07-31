@@ -1,4 +1,4 @@
-import { Oficina, CriarOficina } from '../../shared/models/aula-models'
+import { Oficina, CriarOficina, AtualizarOficina } from '../../shared/models/oficina-models'
 
 export class OficinaMapper {
   static fromApi(aula: any): Oficina {
@@ -19,6 +19,15 @@ export class OficinaMapper {
       DataAula: oficina.dataAula,
       Presentes: oficina.presentes, // Array de IDs de alunos presentes
       TeveAtividade: oficina.teveAtividade
+    }
+  }
+
+  static toAtualizarApi(oficina: any): any {
+    return {
+      DepartamentoId: oficina.departamentoId,
+      DataAula: oficina.dataAula,
+      TeveAtividade: oficina.teveAtividade,
+      Presentes: oficina.presentes
     }
   }
 }
