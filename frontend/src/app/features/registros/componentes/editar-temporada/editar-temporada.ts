@@ -25,12 +25,12 @@ export class EditarTemporada implements OnInit {
     // Recebe os dados vindo do Signal 'temporadaParaEditar' do componente Pai
     @Input() set dadosTemporada(dados: any | null | undefined) {
         if (dados) {
-        this.formulario = {
-            id: dados.id,
-            nome: dados.nome,
-            dataInicio: dados.dataInicio ? dados.dataInicio.substring(0,10) : '',
-            dataFim: dados.dataFim ? dados.dataFim.substring(0, 10) : null
-        }
+            this.formulario = {
+                id: dados.id,
+                nome: dados.nome,
+                dataInicio: dados.dataInicio ? dados.dataInicio.substring(0,10) : '',
+                dataFim: dados.dataFim ? dados.dataFim.substring(0, 10) : null
+            }
         }
     }
 
