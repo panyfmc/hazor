@@ -113,6 +113,27 @@ export class Registros implements OnInit {
     return this.alunos().length
   })
 
+  totalDesign = computed(() => {
+    return this.oficinas().filter(o => {
+      const deptoId = o.departamentoId || o.DepartamentoId
+      return Number(deptoId) === 1 
+    }).length
+  })
+
+  totalFotografia = computed(() => {
+    return this.oficinas().filter(o => {
+      const deptId = o.departamentoId || o.DepartamentoId
+      return Number(deptId) === 2
+    }).length
+  })
+
+    totalProducao = computed(() => {
+    return this.oficinas().filter(o => {
+      const deptId = o.departamentoId || o.DepartamentoId
+      return Number(deptId) === 3
+    }).length
+  })
+
   constructor() {
     effect(() => {
       const tempId = this.temporada()?.id
@@ -122,18 +143,6 @@ export class Registros implements OnInit {
     })
   }
 
-  totalFotografia = computed(() => {
-    return this.aulasPorDepartamento.filter(o => o.id === 1).length
-  })
-
-  totalProducao = computed(() => {
-    return this.aulasPorDepartamento.filter(o => o.id === 2).length
-  })
-
-  totalDesign = computed(() => {
-    return this.aulasPorDepartamento.filter(o => o.id === 3).length
-  })
-
   carregarDadosIniciais() {
     this.temporadaService.listarTemporadas().subscribe({
       next: (temporadasB: any[]) => {
@@ -142,9 +151,6 @@ export class Registros implements OnInit {
         if(temporadasMap.length > 0) {
           this.temporada.set(temporadasMap[0])
         }
-        this.totalFotografia
-        this.totalDesign
-        this.totalProducao
       },
       error: (err) => console.error('Erro ao buscar temporadas:', err)
     })
