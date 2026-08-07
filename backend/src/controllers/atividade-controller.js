@@ -7,10 +7,15 @@ async function criar(req, res) {
     res.status(201).json(atividade)
 }
 
-async function buscarPorOficina(req, res) {
-    const atividade = await atividadeService.buscarPorOficina(
+async function buscarPorId(req, res) {
+    const atividade = await atividadeService.buscarPorId(
         req.params.oficinaId
     )
+    res.json(atividade)
+}
+
+async function listarEmAberto(req, res) {
+    const atividade = await atividadeService.listarEmAberto(req.params.temporadaId)
     res.json(atividade)
 }
 
@@ -59,7 +64,8 @@ async function editarEntregas(req, res) {
 
 module.exports = {
     criar,
-    buscarPorOficina,
+    buscarPorId,
+    listarEmAberto,
     encerrar,
     excluir,
     criarEntrega,

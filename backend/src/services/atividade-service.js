@@ -7,8 +7,12 @@ async function criar(oficinaId) {
     return await atividadeRepository.criar(oficinaId)
 }
 
-async function buscarPorOficina(oficinaId) {
-    return await atividadeRepository.buscarPorOficina(oficinaId)
+async function buscarPorId(oficinaId) {
+    return await atividadeRepository.buscarPorId(oficinaId)
+}
+
+async function listarEmAberto(temporadaId) {
+    return await atividadeRepository.listarEmAberto(temporadaId)
 }
 
 async function encerrar(id) {
@@ -72,7 +76,8 @@ async function editarEntregas(atividadeId, alunosIds) {
 
 module.exports = {
     criar,
-    buscarPorOficina,
+    buscarPorId,
+    listarEmAberto,
     encerrar,
     excluir,
     criarEntrega,
