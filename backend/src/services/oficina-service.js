@@ -84,7 +84,7 @@ async function excluir(id) {
         throw new Error('Oficina não encontrada')
     }
     await presencaRepository.excluirPorOficina(id)
-    const atividade = await atividadeRepository.buscarPorOficina(id)
+    const atividade = await atividadeRepository.buscarPorId(id)
     if(atividade) {
         await entregaRepository.excluirPorAtividade(atividade.Id)
         await atividadeRepository.excluir(atividade.Id)

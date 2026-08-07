@@ -4,7 +4,6 @@ async function listar() {
     const result = await new sql.Request().query(`
         SELECT *
         FROM Temporadas
-        WHERE DeletedAt IS NULL
         ORDER BY DataInicio DESC, Nome DESC
     `)
     return result.recordset
@@ -31,7 +30,7 @@ async function buscarPorId(id) {
         .query(`
             SELECT * FROM Temporadas 
             WHERE Id = @id 
-                AND DeletedAt IS NULL
+               
         `)
     return result.recordset[0]
 }
@@ -49,7 +48,7 @@ async function atualizar(id, temporada) {
             DataInicio = @inicio,
             DataFim = @fim
         WHERE Id = @id
-            AND DeletedAt IS NULL
+           
     `)
 }
 
@@ -63,8 +62,7 @@ async function excluir(id) {
 
         // Realiza o Soft Delete
         await req.query(`
-            UPDATE Entregas
-            SET DeletedAt = GETUTCDATE()
+            DELETE FROM Entregas
             WHERE AtividadeId IN (
                 SELECT Id
                 FROM Atividades
@@ -74,35 +72,30 @@ async function excluir(id) {
                     WHERE TemporadaId = @id
                 )
             )
-                AND DeletedAt IS NULL
                     
-            UPDATE Presencas
-            SET DeletedAt = GETUTCDATE()
+            DELETE FROM Presencas
             WHERE OficinaId IN (
                 SELECT Id
                 FROM Oficinas
                 WHERE TemporadaId = @id
             )
-                AND DeletedAt IS NULL
+                
 
-            UPDATE Atividades
-            SET DeletedAt = GETUTCDATE()
+            DELETE FROM Atividades
             WHERE OficinaId IN (
                 SELECT Id
                 FROM Oficinas
                 WHERE TemporadaId = @id
             )
-                AND DeletedAt IS NULL
+                
 
-            UPDATE Oficinas 
-            SET DeletedAt = GETUTCDATE()
+            DELETE FROM Oficinas 
             WHERE TemporadaId = @id
-                AND DeletedAt IS NULL
+                
 
-            UPDATE Temporadas 
-            SET DeletedAt = GETUTCDATE()
+            DELETE FROM Temporadas 
             WHERE Id = @id
-                AND DeletedAt IS NULL
+                
 
         `)
 

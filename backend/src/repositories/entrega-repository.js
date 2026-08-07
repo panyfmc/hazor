@@ -4,33 +4,21 @@ async function criarEntrega(atividadeId, alunoId, transaction = null) {
 
     const request = transaction
         ? new sql.Request(transaction)
-        : new sql.Request();
+        : new sql.Request()
 
     request
         .input('atividadeId', sql.Int, atividadeId)
-        .input('alunoId', sql.Int, alunoId);
+        .input('alunoId', sql.Int, alunoId)
 
     const existe = await request.query(`
-        SELECT Id, DeletedAt
+        SELECT Id
         FROM Entregas
         WHERE AtividadeId = @atividadeId
           AND AlunoId = @alunoId
-    `);
+    `)
 
     if (existe.recordset.length > 0) {
-
-        if (existe.recordset[0].DeletedAt !== null) {
-
-            request.input('id', sql.Int, existe.recordset[0].Id);
-
-            await request.query(`
-                UPDATE Entregas
-                SET DeletedAt = NULL
-                WHERE Id = @id
-            `);
-        }
-
-        return existe.recordset[0];
+        return existe.recordset[0]
     }
 
     await request.query(`
@@ -44,7 +32,7 @@ async function criarEntrega(atividadeId, alunoId, transaction = null) {
             @atividadeId,
             @alunoId
         )
-    `);
+    `)
 }
 
 async function removerEntrega(atividadeId, alunoId) {
@@ -52,11 +40,10 @@ async function removerEntrega(atividadeId, alunoId) {
         .input('atividadeId', sql.Int, atividadeId)
         .input('alunoId', sql.Int, alunoId)
         .query(`
-            UPDATE Entregas
-            SET DeletedAt = GETUTCDATE()
+            DELETE FROM Entregas
             WHERE AtividadeId = @atividadeId
                 AND AlunoId = @alunoId
-                AND DeletedAt IS NULL
+                
         `)
 }
 
@@ -70,7 +57,7 @@ async function listarPorAtividade(id) {
             INNER JOIN Alunos A
                 ON A.Id = E.AlunoId
             WHERE E.AtividadeId = @id
-                AND E.DeletedAt IS NULL
+               
             ORDER BY A.NomeCompleto
         `)
     return result.recordset
@@ -85,10 +72,9 @@ async function excluirPorAtividade(atividadeId, transaction = null) {
     await request
         .input('atividadeId', sql.Int, atividadeId)
         .query(`
-            UPDATE Entregas
-            SET DeletedAt = GETUTCDATE()
-            WHERE AtividadeId=@atividadeId
-                AND DeletedAt IS NULL
+            DELETE FROM Entregas
+            WHERE AtividadeId = @atividadeId
+               
         `)
 
 }
@@ -99,7 +85,7 @@ async function contarPorAluno() {
             AlunoId,
             COUNT(*) AS Total
         FROM Entregas
-        WHERE DeletedAt IS NULL
+        
         GROUP BY AlunoId
     `)
 

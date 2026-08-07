@@ -1,8 +1,8 @@
 const {sql} = require('../config/database')
 
 async function listar(temporadaId) {
-    const request = new sql.Request();
     
+    const request = new sql.Request();
     let query = `
         SELECT
             O.Id,
@@ -14,10 +14,9 @@ async function listar(temporadaId) {
         FROM Oficinas O
         LEFT JOIN Presencas P
             ON P.OficinaId = O.Id
-            AND P.DeletedAt IS NULL
-        WHERE O.DeletedAt IS NULL
+        WHERE 1 = 1
     `;
-
+    
     // Se vier uma temporada do Front, aplica o filtro antes do GROUP BY
     if (temporadaId) {
         query += ` AND O.TemporadaId = @temporadaId `;
@@ -33,8 +32,9 @@ async function listar(temporadaId) {
             O.TeveAtividade
         ORDER BY O.DataAula DESC
     `;
-
+    console.log(query)
     const result = await request.query(query);
+    console.log(result.recordset);
     return result.recordset;
 }
 
@@ -69,7 +69,7 @@ async function buscarPorId(id) {
     .query(`
         SELECT * FROM Oficinas
         WHERE Id = @id
-            AND DeletedAt IS NULL
+            
     `)
     return result.recordset[0]
 }
@@ -87,7 +87,7 @@ async function atualizar(id, oficina) {
                 DataAula = ISNULL(@dataAula, DataAula),
                 TeveAtividade = ISNULL(@teveAtividade, TeveAtividade)
             WHERE Id = @id
-                AND DeletedAt IS NULL
+                
         `)
 }
 
@@ -98,24 +98,21 @@ async function excluir(id) {
         const req = new sql.Request(transaction)
         req.input('id', sql.Int, id) 
         await req.query(`
-            UPDATE Entregas
-            SET DeletedAt = GETUTCDATE()
+            DELETE FROM Entregas
+            
             WHERE AtividadeId IN (
                 SELECT Id
                 FROM Atividades
                 WHERE OficinaId = @id
             )    
 
-            UPDATE Atividades
-            SET DeletedAt = GETUTCDATE()
+            DELETE FROM Atividades
             WHERE OficinaId = @id
 
-            UPDATE Presencas
-            SET DeletedAt = GETUTCDATE()
+            DELETE FROM Presencas
             WHERE OficinaId = @id
 
-            UPDATE Oficinas
-            SET DeletedAt = GETUTCDATE()
+            DELETE FROM Oficinas
             WHERE Id = @id
         `)
         await transaction.commit()
@@ -129,7 +126,7 @@ async function contar() {
     const result = await new sql.Request().query(`
         SELECT COUNT(*) AS Total
         FROM Oficinas
-        WHERE DeletedAt IS NULL
+        
     `)
 
     return result.recordset[0].Total

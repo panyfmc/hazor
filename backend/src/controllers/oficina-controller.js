@@ -6,9 +6,7 @@ async function listar(req, res) {
         const aulas = await aulaService.listar(temporadaId)
         res.json(aulas)
     } catch(error) {
-        res.status(400).json({
-            mensagem: error.message
-        })
+        console.error(error.message)
     }  
 }
 

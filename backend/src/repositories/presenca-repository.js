@@ -5,7 +5,7 @@ async function listar() {
     .query(`
         SELECT *
         FROM Presencas
-        WHERE DeletedAt IS NULL
+        
     `)
     return result.recordset
 }
@@ -15,7 +15,7 @@ async function buscarPorId(id) {
     .query(`
         SELECT * FROM Presencas
         WHERE Id = @id
-            AND DeletedAt IS NULL
+           
     `)
     return result.recordset[0]
 }
@@ -29,25 +29,13 @@ async function criar(presenca) {
         .input('alunoId', sql.Int, presenca.alunoId)
 
     const existe = await request.query(`
-        SELECT Id, DeletedAt
+        SELECT Id
         FROM Presencas
         WHERE OficinaId = @oficinaId
           AND AlunoId = @alunoId
     `)
 
     if (existe.recordset.length > 0) {
-
-        if (existe.recordset[0].DeletedAt !== null) {
-
-            request.input('id', sql.Int, existe.recordset[0].Id)
-
-            await request.query(`
-                UPDATE Presencas
-                SET DeletedAt = NULL
-                WHERE Id = @id
-            `)
-        }
-
         return existe.recordset[0]
     }
 
@@ -80,7 +68,6 @@ async function listarPorOficina(oficinaId) {
             INNER JOIN Alunos a
                 ON a.Id = p.AlunoId
             WHERE p.OficinaId = @oficinaId
-                AND p.DeletedAt IS NULL
             ORDER BY a.NomeCompleto
         `)
 
@@ -91,10 +78,9 @@ async function excluir(id) {
     await new sql.Request()
         .input('id', sql.Int, id)
         .query(`
-            UPDATE Presencas
-            SET DeletedAt = GETUTCDATE()
+            DELETE FROM Presencas
             WHERE Id = @id
-                AND DeletedAt IS NULL
+                
         `)
 }
 
@@ -102,10 +88,9 @@ async function excluirPorOficina(oficinaId) {
     await new sql.Request()
         .input('oficinaId', sql.Int, oficinaId)
         .query(`
-            UPDATE Presencas
-            SET DeletedAt = GETUTCDATE()
+            DELETE FROM Presencas
             WHERE OficinaId = @oficinaId
-                AND DeletedAt IS NULL
+                
         `)
 }
 
@@ -117,7 +102,7 @@ async function listarIdsPorOficina(oficinaId) {
             SELECT AlunoId
             FROM Presencas
             WHERE OficinaId = @oficinaId
-                AND DeletedAt IS NULL
+                
         `)
 
     return result.recordset
@@ -129,7 +114,7 @@ async function contarPorAluno() {
             AlunoId,
             COUNT(*) AS Total
         FROM Presencas
-            WHERE DeletedAt IS NULL
+           
         GROUP BY AlunoId
     `)
 
